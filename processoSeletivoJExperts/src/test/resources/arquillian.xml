@@ -4,7 +4,7 @@
   http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
 
 	<extension qualifier="persistence">
-		<property name="defaultDataSource">java:/db1</property>
+		<property name="defaultDataSource">java:/pessoasDataSource</property>
 	</extension>
 	<extension qualifier="persistence-dbunit">
 		<property name="datatypeFactory">org.dbunit.ext.hsqldb.HsqldbDataTypeFactory</property>
