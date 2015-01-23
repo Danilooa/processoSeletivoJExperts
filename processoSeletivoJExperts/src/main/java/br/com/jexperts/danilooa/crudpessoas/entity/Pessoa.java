@@ -170,6 +170,24 @@ public class Pessoa {
 	return result;
     }
 
+    public String telefoneCelularFormatado(){
+	StringBuilder telefoneCelularFormato = new StringBuilder();
+	if(dddTelefoneCelular == null || dddTelefoneCelular.isEmpty()){
+	    return "";
+	}
+	if(prefixoTelefoneCelular == null || prefixoTelefoneCelular.isEmpty()){
+	    return "";
+	}
+	if(sufixoTelefoneCelular == null || sufixoTelefoneCelular.isEmpty()){
+	    return "";
+	}
+	telefoneCelularFormato.append(dddTelefoneCelular);
+	telefoneCelularFormato.append("-");
+	telefoneCelularFormato.append(prefixoTelefoneCelular);
+	telefoneCelularFormato.append("-");
+	telefoneCelularFormato.append(sufixoTelefoneCelular);
+	return telefoneCelularFormato.toString();
+    }
     @Override
     public boolean equals(Object obj) {
 	if (this == obj) {

@@ -68,10 +68,12 @@ public class PessoaController implements Serializable {
         this.pessoaSelecionada = pessoaSelecionada;
     }
      
-    
     public void onRowSelect(SelectEvent event) {
         FacesMessage msg = new FacesMessage("Car Selected", ""+((Pessoa) event.getObject()).getId());
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
+    public void filtrarPessoas(){
+	System.out.println(filtroListagemPessoasDTO.getCpf());
+    }
 }

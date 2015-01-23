@@ -303,7 +303,20 @@ public class PessoaServiceTest extends TransactionalTestCase {
     @Test
     public void deveContarPessoasCorretamenteSemFiltroPreenchido() {
 	gerarMassaDadosTestesListagem();
-	Assert.assertEquals("Nao contou os registros corretamente", new Long(27L), pessoaService.contaTotalPessoas(new FiltroListagemPessoasDTO()));
+	FiltroListagemPessoasDTO filtroListagemPessoasDTO = new FiltroListagemPessoasDTO();
+
+	filtroListagemPessoasDTO.setCpf("");
+	filtroListagemPessoasDTO.setNomeMaeOuPai("");
+	filtroListagemPessoasDTO.setNomePessoa("");
+
+	Assert.assertEquals("Nao contou os registros corretamente", new Long(27L), pessoaService.contaTotalPessoas(filtroListagemPessoasDTO));
+
+	filtroListagemPessoasDTO.setCpf(null);
+	filtroListagemPessoasDTO.setNomeMaeOuPai(null);
+	filtroListagemPessoasDTO.setNomePessoa(null);
+
+	Assert.assertEquals("Nao contou os registros corretamente", new Long(27L), pessoaService.contaTotalPessoas(filtroListagemPessoasDTO));
+
     }
 
     @Test
@@ -312,12 +325,20 @@ public class PessoaServiceTest extends TransactionalTestCase {
 	gerarMassaDadosTestesListagem();
 	FiltroListagemPessoasDTO filtroListagemPessoasDTO = new FiltroListagemPessoasDTO();
 
+	filtroListagemPessoasDTO.setCpf("");
+	filtroListagemPessoasDTO.setNomeMaeOuPai("");
+	filtroListagemPessoasDTO.setNomePessoa("");
+
 	filtroListagemPessoasDTO.setIndexDoPrimeiraRegistroDaPagina(0);
 	filtroListagemPessoasDTO.setQuantidadeDeRegistrosPorPagina(quantidadeDeRegistrosPorPagina);
 	List<Pessoa> primeiraPagina = pessoaService.listarPessoas(filtroListagemPessoasDTO);
 	Assert.assertEquals("O tamanho da primeira pagina nao esta correto", new Long(quantidadeDeRegistrosPorPagina), new Long(primeiraPagina.size()));
 	Assert.assertEquals("O primeiro registro da primeira pagina nao foi o esperado", "Avo Masculino", primeiraPagina.get(0).getNomeCompleto());
 	Assert.assertEquals("O ultimo registro da primeira pagina nao foi o esperado", "Pessoa7", primeiraPagina.get(9).getNomeCompleto());
+
+	filtroListagemPessoasDTO.setCpf(null);
+	filtroListagemPessoasDTO.setNomeMaeOuPai(null);
+	filtroListagemPessoasDTO.setNomePessoa(null);
 
 	filtroListagemPessoasDTO.setIndexDoPrimeiraRegistroDaPagina(quantidadeDeRegistrosPorPagina);
 	List<Pessoa> segundaPagina = pessoaService.listarPessoas(filtroListagemPessoasDTO);
@@ -389,7 +410,6 @@ public class PessoaServiceTest extends TransactionalTestCase {
 	Long numeroTotalDeRegistros = pessoaService.contaTotalPessoas(filtroListagemPessoasDTO);
 	Assert.assertEquals("Nao contou o total de registros corretamente quando o nome do pai foi informado", new Long(1), new Long(numeroTotalDeRegistros));
 
-	
 	filtroListagemPessoasDTO.setNomeMaeOuPai("maeComONomeDiferente");
 	filtroListagemPessoasDTO.setIndexDoPrimeiraRegistroDaPagina(0);
 	filtroListagemPessoasDTO.setQuantidadeDeRegistrosPorPagina(quantidadeDeRegistrosPorPagina);
@@ -405,7 +425,8 @@ public class PessoaServiceTest extends TransactionalTestCase {
 	gerarMassaDadosTestesListagem();
 	Integer quantidadeDeRegistrosPorPagina = 10;
 	FiltroListagemPessoasDTO filtroListagemPessoasDTO = new FiltroListagemPessoasDTO();
-	filtroListagemPessoasDTO.setNomePessoa("Pessoa24");;
+	filtroListagemPessoasDTO.setNomePessoa("Pessoa24");
+	;
 	filtroListagemPessoasDTO.setIndexDoPrimeiraRegistroDaPagina(0);
 	filtroListagemPessoasDTO.setQuantidadeDeRegistrosPorPagina(quantidadeDeRegistrosPorPagina);
 	List<Pessoa> unicaPagina = pessoaService.listarPessoas(filtroListagemPessoasDTO);

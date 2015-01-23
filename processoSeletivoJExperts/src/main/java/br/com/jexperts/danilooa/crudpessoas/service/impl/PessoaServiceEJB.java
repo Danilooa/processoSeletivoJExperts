@@ -97,14 +97,14 @@ public class PessoaServiceEJB implements PessoaService {
     }
 
     private void definirParametrosQuery(FiltroListagemPessoasDTO filtroListagemPessoasDTO, Query query) {
-	if (filtroListagemPessoasDTO.getNomePessoa() != null && !filtroListagemPessoasDTO.getNomePessoa().isEmpty()) {
-	    query.setParameter("nomePessoa", "%" + filtroListagemPessoasDTO.getNomePessoa() + "%");
+	if (filtroListagemPessoasDTO.getNomePessoa() != null && !filtroListagemPessoasDTO.getNomePessoa().trim().isEmpty()) {
+	    query.setParameter("nomePessoa", "%" + filtroListagemPessoasDTO.getNomePessoa().toUpperCase() + "%");
 	}
-	if (filtroListagemPessoasDTO.getCpf() != null && !filtroListagemPessoasDTO.getCpf().isEmpty()) {
+	if (filtroListagemPessoasDTO.getCpf() != null && !filtroListagemPessoasDTO.getCpf().trim().isEmpty()) {
 	    query.setParameter("cpf", filtroListagemPessoasDTO.getCpf());
 	}
-	if (filtroListagemPessoasDTO.getNomeMaeOuPai() != null && !filtroListagemPessoasDTO.getNomeMaeOuPai().isEmpty()) {
-	    query.setParameter("nomeMaeOuPai", filtroListagemPessoasDTO.getNomeMaeOuPai());
+	if (filtroListagemPessoasDTO.getNomeMaeOuPai() != null && !filtroListagemPessoasDTO.getNomeMaeOuPai().trim().isEmpty()) {
+	    query.setParameter("nomeMaeOuPai", "%" + filtroListagemPessoasDTO.getNomeMaeOuPai().toUpperCase() +"%");
 	}
 	if (filtroListagemPessoasDTO.getDataInicialAniversario() != null) {
 	    query.setParameter("dataInicialAniversario", filtroListagemPessoasDTO.getDataInicialAniversario());
@@ -143,6 +143,14 @@ public class PessoaServiceEJB implements PessoaService {
 	stringBuilderQueryListagemPessoas.append(instrucaoParaListarOuContar);
 	stringBuilderQueryListagemPessoas.append("from  ");
 	stringBuilderQueryListagemPessoas.append("		Pessoa p ");
+	
+	if (deveContar) {
+	    stringBuilderQueryListagemPessoas.append("		left join p.pai  pai ");
+	    stringBuilderQueryListagemPessoas.append("		left join p.mae mae ");
+	}else{
+	    stringBuilderQueryListagemPessoas.append("		left join fetch p.pai pai ");
+	    stringBuilderQueryListagemPessoas.append("		left join fetch p.mae mae ");	    
+	}
 	List<Object> listArgumentosPreenchidos = new ArrayList<>();
 	listArgumentosPreenchidos.add(filtroListagemPessoasDTO.getCpf());
 	listArgumentosPreenchidos.add(filtroListagemPessoasDTO.getDataFinalAniversario());
@@ -152,7 +160,7 @@ public class PessoaServiceEJB implements PessoaService {
 
 	boolean todosArgumentosNulos = true;
 	for (Object argumento : listArgumentosPreenchidos) {
-	    if (argumento != null) {
+	    if (argumento != null && !argumento.toString().trim().isEmpty()) {
 		todosArgumentosNulos = false;
 		break;
 	    }
@@ -161,9 +169,9 @@ public class PessoaServiceEJB implements PessoaService {
 	if (todosArgumentosNulos) {
 	    return stringBuilderQueryListagemPessoas.toString();
 	}
-	stringBuilderQueryListagemPessoas.append("Where ");
+	stringBuilderQueryListagemPessoas.append(" Where ");
 	if (filtroListagemPessoasDTO.getNomePessoa() != null && !filtroListagemPessoasDTO.getNomePessoa().isEmpty()) {
-	    stringBuilderQueryListagemPessoas.append("		p.nomeCompleto like :nomePessoa ");
+	    stringBuilderQueryListagemPessoas.append("		upper(p.nomeCompleto) like :nomePessoa ");
 	    stringBuilderQueryListagemPessoas.append("and");
 	}
 	if (filtroListagemPessoasDTO.getCpf() != null && !filtroListagemPessoasDTO.getCpf().isEmpty()) {
@@ -172,9 +180,9 @@ public class PessoaServiceEJB implements PessoaService {
 	}
 	if (filtroListagemPessoasDTO.getNomeMaeOuPai() != null && !filtroListagemPessoasDTO.getNomeMaeOuPai().isEmpty()) {
 	    stringBuilderQueryListagemPessoas.append(" ( ");
-	    stringBuilderQueryListagemPessoas.append("	p.pai.nomeCompleto like :nomeMaeOuPai ");
+	    stringBuilderQueryListagemPessoas.append("	upper(pai.nomeCompleto) like :nomeMaeOuPai ");
 	    stringBuilderQueryListagemPessoas.append("	or ");
-	    stringBuilderQueryListagemPessoas.append("	p.mae.nomeCompleto like :nomeMaeOuPai ");
+	    stringBuilderQueryListagemPessoas.append("	upper(mae.nomeCompleto) like :nomeMaeOuPai ");
 	    stringBuilderQueryListagemPessoas.append(" ) ");
 	    stringBuilderQueryListagemPessoas.append("and ");
 	}

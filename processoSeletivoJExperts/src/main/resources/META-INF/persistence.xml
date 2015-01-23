@@ -10,7 +10,9 @@ http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
 			<property name="openjpa.ConnectionFactoryProperties" value="PrintParameters=true" />
 			<property name="openjpa.Log" value="DefaultLevel=WARN, Runtime=INFO, Tool=INFO, SQL=TRACE"/>
 			<property name="hibernate.hbm2ddl.auto" value="create"/>
-			<property name = "hibernate.show_sql" value = "true" />
+			<property name ="hibernate.show_sql" value = "true" />
+			<property name="hibernate.format_sql" value = "true"/>
+			<property name="hibernate.use_sql_comments" value = "true"/>
 		</properties>
 	</persistence-unit>
 </persistence>

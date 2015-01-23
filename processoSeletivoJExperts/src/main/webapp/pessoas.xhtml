@@ -3,13 +3,46 @@
 <h:head></h:head>
 <body>
 	<h:form>
-		<p:dataTable var="pessoa" value="#{pessoaController.lazyModel}" paginator="true" rows="10" paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}" rowsPerPageTemplate="10" selectionMode="single" selection="#{pessoaController.pessoaSelecionada}" id="tablePessoa" lazy="true">
+		<p:panel header="Filtro de pessoas" style="margin-bottom:20px">
+			<h:panelGrid columns="3" cellpadding="10">
+
+				<p:outputLabel value="#{msgs.nome}" for="inputTextNomePessoa" />
+				<p:inputText id="inputTextNomePessoa" value="#{pessoaController.filtroListagemPessoasDTO.nomePessoa}" maxlength="150" />
+				<p:message for="inputTextNomePessoa" />
+				
+				<p:outputLabel for="calendarDataInicial" value="#{msgs.dataInicial}" />
+				<p:calendar id="calendarDataInicial" value="#{pessoaController.filtroListagemPessoasDTO.dataInicialAniversario}" pattern="dd-MM-yyyy" mask="true"/>
+				<p:message for="calendarDataInicial" />
+
+				<p:outputLabel for="calendarDataFinal" value="#{msgs.dataFinal}" />
+				<p:calendar id="calendarDataFinal" value="#{pessoaController.filtroListagemPessoasDTO.dataFinalAniversario}" pattern="dd-MM-yyyy" mask="true"/>
+				<p:message for="calendarDataFinal" />
+
+				<p:outputLabel for="inputTextNomePaiOuMae" value="#{msgs.maeOuPai}" />
+				<p:inputText id="inputTextNomePaiOuMae" value="#{pessoaController.filtroListagemPessoasDTO.nomeMaeOuPai}" />
+				<p:message for="inputTextNomePaiOuMae" />
+
+				<p:outputLabel for="inputMaskCpf" value="#{msgs.cpf}" />
+				<p:inputMask id="inputMaskCpf" value="#{pessoaController.filtroListagemPessoasDTO.cpf}" mask="999.999.999-99" />
+				<p:message for="inputMaskCpf" />
+
+			</h:panelGrid>
+			<p:commandButton value="#{msgs.pesquisar}" action="#{pessoaController.filtrarPessoas}" ajax="false" />
+		</p:panel>
+
+		<p:dataTable var="pessoa" value="#{pessoaController.lazyModel}" paginator="true" rows="10" paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}" rowsPerPageTemplate="10" selectionMode="single" emptyMessage="#{msgs.naoAPessoasCadastradas}" selection="#{pessoaController.pessoaSelecionada}" id="tablePessoa" lazy="true">
 			<p:ajax event="rowSelect" listener="#{pessoaController.onRowSelect}" />
-			<p:column headerText="Id">
-				<h:outputText value="#{pessoa.id}" />
-			</p:column>
-			<p:column headerText="Nome">
+			<p:column headerText="#{msgs.nome}">
 				<h:outputText value="#{pessoa.nomeCompleto}" />
+			</p:column>
+			<p:column headerText="#{msgs.cpf}">
+				<h:outputText value="#{pessoa.cpf}" />
+			</p:column>
+			<p:column headerText="#{msgs.telefoneCelular}">
+				<h:outputText value="#{pessoa.telefoneCelularFormatado()}" />				
+			</p:column>
+			<p:column headerText="#{msgs.nomeMae}">
+				<h:outputText value="#{pessoa.mae.nomeCompleto}" />				
 			</p:column>
 		</p:dataTable>
 	</h:form>
