@@ -15,9 +15,6 @@ import br.com.jexperts.danilooa.crudpessoas.exception.NegocioException.Identific
 import br.com.jexperts.danilooa.crudpessoas.jpa.IdentificadorQueries;
 import br.com.jexperts.danilooa.crudpessoas.service.PessoaService;
 
-import com.google.common.base.Predicates;
-import com.google.common.collect.FluentIterable;
-
 @Stateless
 public class PessoaServiceEJB implements PessoaService {
 
@@ -152,9 +149,16 @@ public class PessoaServiceEJB implements PessoaService {
 	listArgumentosPreenchidos.add(filtroListagemPessoasDTO.getDataInicialAniversario());
 	listArgumentosPreenchidos.add(filtroListagemPessoasDTO.getNomeMaeOuPai());
 	listArgumentosPreenchidos.add(filtroListagemPessoasDTO.getNomePessoa());
-	FluentIterable<Object> fluentIterableArgumentosPreenchiso = FluentIterable.from(listArgumentosPreenchidos);
-	Boolean todosOsArgumentosSaoNulos = fluentIterableArgumentosPreenchiso.allMatch(Predicates.isNull());
-	if (todosOsArgumentosSaoNulos) {
+
+	boolean todosArgumentosNulos = true;
+	for (Object argumento : listArgumentosPreenchidos) {
+	    if (argumento != null) {
+		todosArgumentosNulos = false;
+		break;
+	    }
+	}
+	
+	if (todosArgumentosNulos) {
 	    return stringBuilderQueryListagemPessoas.toString();
 	}
 	stringBuilderQueryListagemPessoas.append("Where ");
@@ -189,6 +193,6 @@ public class PessoaServiceEJB implements PessoaService {
 	    stringBuilderQueryListagemPessoas.append(" order by  ");
 	    stringBuilderQueryListagemPessoas.append(" p.nomeCompleto  ");
 	}
-return stringBuilderQueryListagemPessoas.toString();
+	return stringBuilderQueryListagemPessoas.toString();
     }
 }

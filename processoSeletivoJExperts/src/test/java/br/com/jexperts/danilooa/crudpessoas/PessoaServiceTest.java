@@ -60,7 +60,7 @@ public class PessoaServiceTest extends TransactionalTestCase {
     @Deployment
     public static JavaArchive deploy() {
 
-	return createDeployment().addClass(PessoaDataBuilder.class).addClass(NegocioException.class).addClass(PessoaService.class).addClass(PessoaServiceEJB.class).addClass(AppConfig.class).addClass(Pessoa.class).addClass(GeneroEnum.class).addClass(IdentificadorQueries.class).addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml").addAsResource("META-INF/queries.xml", "META-INF/queries.xml").addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+	return createDeployment().addClass(PessoaDataBuilder.class).addClass(NegocioException.class).addClass(PessoaService.class).addClass(FiltroListagemPessoasDTO.class).addClass(PessoaServiceEJB.class).addClass(AppConfig.class).addClass(Pessoa.class).addClass(GeneroEnum.class).addClass(IdentificadorQueries.class).addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml").addAsResource("META-INF/queries.xml", "META-INF/queries.xml").addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
     }
 
