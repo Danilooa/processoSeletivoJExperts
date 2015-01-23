@@ -195,4 +195,9 @@ public class PessoaServiceEJB implements PessoaService {
 	}
 	return stringBuilderQueryListagemPessoas.toString();
     }
+
+    @Override
+    public Pessoa getPessoa(Long idPessoa) {
+	return entityManager.find(Pessoa.class, idPessoa);
+    }
 }

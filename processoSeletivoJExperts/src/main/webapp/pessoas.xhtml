@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
+<h:head></h:head>
+<body>
+	<h:form>
+		<p:dataTable var="pessoa" value="#{pessoaController.lazyModel}" paginator="true" rows="10" paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}" rowsPerPageTemplate="10" selectionMode="single" selection="#{pessoaController.pessoaSelecionada}" id="tablePessoa" lazy="true">
+			<p:ajax event="rowSelect" listener="#{pessoaController.onRowSelect}" />
+			<p:column headerText="Id">
+				<h:outputText value="#{pessoa.id}" />
+			</p:column>
+			<p:column headerText="Nome">
+				<h:outputText value="#{pessoa.nomeCompleto}" />
+			</p:column>
+		</p:dataTable>
+	</h:form>
+</body>
+</html>
