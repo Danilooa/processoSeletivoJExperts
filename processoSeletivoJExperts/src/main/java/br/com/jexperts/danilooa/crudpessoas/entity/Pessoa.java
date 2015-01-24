@@ -22,6 +22,7 @@ public class Pessoa {
     private GeneroEnum genero;
     private Date dataNascimento;
     private String cpf;
+    private byte[] imagem;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idPai", referencedColumnName="id")
@@ -188,6 +189,16 @@ public class Pessoa {
 	telefoneCelularFormato.append(sufixoTelefoneCelular);
 	return telefoneCelularFormato.toString();
     }
+    
+    
+    public byte[] getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(byte[] imagem) {
+        this.imagem = imagem;
+    }
+
     @Override
     public boolean equals(Object obj) {
 	if (this == obj) {

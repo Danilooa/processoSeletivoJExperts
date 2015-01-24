@@ -74,7 +74,7 @@ public class FiltroPessoaController implements Serializable {
     
     public void excluir() {
 	pessoaService.excluir(pessoaSelecionada);
-	JavaServerFacesUtils.adicionarMensagem(Mensagens.EXCLUSAO_REALIZADA_COM_SUCESSO.name());
+	JavaServerFacesUtils.adicionarMensagemInformacao(Mensagens.EXCLUSAO_REALIZADA_COM_SUCESSO.name());
 	lazyModel.setRowCount(lazyModel.getRowCount() - 1);
     }
 

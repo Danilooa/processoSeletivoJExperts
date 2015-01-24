@@ -5,11 +5,16 @@
 	<f:metadata>
 		<f:viewParam name="idPessoa" value="#{cadastroPessoaController.idPessoa}" />
 	</f:metadata>
-	<p:growl id="message" for="" />
+
 	<h:form>
+		<p:growl id="messages" for="exibirGrowl" />
 		<p:panel header="#{cadastroPessoaController.tituloPagina} " style="margin-bottom:20px">
 			<h:panelGrid columns="3" cellpadding="10">
 
+				<p:outputLabel value="#{msgs.imagem}" for="graphicImage" />
+				<p:graphicImage id="graphicImage" value="#{cadastroPessoaController.imagem}"/>
+				<p:fileUpload id="fileUploadImagem" fileUploadListener="#{cadastroPessoaController.tratarUploadImagem}" label="#{msgs.atualizarImagem}" mode="advanced" update="messages,graphicImage" auto="true" sizeLimit="500000" allowTypes="/(\.|\/)(jpe?g|png)$/" />
+				
 				<p:outputLabel value="#{msgs.nome}" for="inputTextNomePessoa" />
 				<p:inputText id="inputTextNomePessoa" value="#{cadastroPessoaController.pessoa.nomeCompleto}" maxlength="150" required="true" requiredMessage="#{msgs.essaCampoDeveSerInformado}" />
 				<p:message for="inputTextNomePessoa" />
@@ -45,7 +50,7 @@
 					<h:outputText value="-" />
 					<p:inputText id="inputTextPrefixoTelefoneCelular" value="#{cadastroPessoaController.pessoa.prefixoTelefoneCelular}" maxlength="5" style="width: 50px" required="true" requiredMessage="${msgs.prefixoDeveSerInformado}" />
 					<h:outputText value="-" />
-					<p:inputText id="inputTextSufixoTelefoneCelular" value="#{cadastroPessoaController.pessoa.sufixoTelefoneCelular}" maxlength="4" style="width: 50px" required="true"  requiredMessage="${msgs.sufixoDeveSerInformado}"/>
+					<p:inputText id="inputTextSufixoTelefoneCelular" value="#{cadastroPessoaController.pessoa.sufixoTelefoneCelular}" maxlength="4" style="width: 50px" required="true" requiredMessage="${msgs.sufixoDeveSerInformado}" />
 				</h:panelGrid>
 				<h:panelGrid columns="3">
 					<p:message for="inputTextDddCelular" />
