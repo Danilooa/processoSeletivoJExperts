@@ -1,6 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
-<h:head></h:head>
+<h:head>
+	<script type="text/javascript">
+		$(window).load(function() {
+			$("[id$='botaoIncluirTopo']").appendTo("[id$='tablePessoa_paginator_top']");
+			$("[id$='botaoIncluirRodape']").appendTo("[id$='tablePessoa_paginator_bottom']");
+		});
+</script>
+</h:head>
 <body>
 	<p:growl id="message" showDetail="true" />
 	<h:form>
@@ -8,31 +15,34 @@
 			<h:panelGrid columns="3" cellpadding="10">
 
 				<p:outputLabel value="#{msgs.nome}" for="inputTextNomePessoa" />
-				<p:inputText id="inputTextNomePessoa" value="#{pessoaController.filtroListagemPessoasDTO.nomePessoa}" maxlength="150" />
+				<p:inputText id="inputTextNomePessoa" value="#{filtroPessoaController.filtroListagemPessoasDTO.nomePessoa}" maxlength="150" />
 				<p:message for="inputTextNomePessoa" />
 
 				<p:outputLabel for="calendarDataInicial" value="#{msgs.dataInicial}" />
-				<p:calendar id="calendarDataInicial" value="#{pessoaController.filtroListagemPessoasDTO.dataInicialAniversario}" pattern="dd-MM-yyyy" mask="true" />
+				<p:calendar id="calendarDataInicial" value="#{filtroPessoaController.filtroListagemPessoasDTO.dataInicialAniversario}" pattern="dd-MM-yyyy" mask="true" />
 				<p:message for="calendarDataInicial" />
 
 				<p:outputLabel for="calendarDataFinal" value="#{msgs.dataFinal}" />
-				<p:calendar id="calendarDataFinal" value="#{pessoaController.filtroListagemPessoasDTO.dataFinalAniversario}" pattern="dd-MM-yyyy" mask="true" />
+				<p:calendar id="calendarDataFinal" value="#{filtroPessoaController.filtroListagemPessoasDTO.dataFinalAniversario}" pattern="dd-MM-yyyy" mask="true" />
 				<p:message for="calendarDataFinal" />
 
 				<p:outputLabel for="inputTextNomePaiOuMae" value="#{msgs.maeOuPai}" />
-				<p:inputText id="inputTextNomePaiOuMae" value="#{pessoaController.filtroListagemPessoasDTO.nomeMaeOuPai}" />
+				<p:inputText id="inputTextNomePaiOuMae" value="#{filtroPessoaController.filtroListagemPessoasDTO.nomeMaeOuPai}" />
 				<p:message for="inputTextNomePaiOuMae" />
 
 				<p:outputLabel for="inputMaskCpf" value="#{msgs.cpf}" />
-				<p:inputMask id="inputMaskCpf" value="#{pessoaController.filtroListagemPessoasDTO.cpf}" mask="999.999.999-99">
-					<p:ajax  event="blur" process="inputMaskCpf"/>
+				<p:inputMask id="inputMaskCpf" value="#{filtroPessoaController.filtroListagemPessoasDTO.cpf}" mask="999.999.999-99">
+					<p:ajax event="blur" process="inputMaskCpf" />
 				</p:inputMask>
 				<p:message for="inputMaskCpf" />
 
 			</h:panelGrid>
-			<p:commandButton value="#{msgs.pesquisar}" actionListener="#{pessoaController.listar}" update="tablePessoa" />
+			<p:commandButton value="#{msgs.pesquisar}" actionListener="#{filtroPessoaController.listar}" update="tablePessoa" />
 		</p:panel>
-		<p:dataTable id="tablePessoa" var="pessoa" value="#{pessoaController.lazyModel}"  paginator="true" rows="10" paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}" rowsPerPageTemplate="10"  emptyMessage="#{msgs.naoAPessoasCadastradas}" lazy="true">
+
+		<p:button id="botaoIncluirTopo" value="#{msgs.incluir}" outcome="pessoa.xhtml" />
+
+		<p:dataTable id="tablePessoa" var="pessoa" value="#{filtroPessoaController.lazyModel}" paginator="true" rows="10" paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}" rowsPerPageTemplate="10" emptyMessage="#{msgs.naoAPessoasCadastradas}" lazy="true">
 			<p:column headerText="#{msgs.nome}">
 				<h:outputText value="#{pessoa.nomeCompleto}" />
 			</p:column>
@@ -46,14 +56,22 @@
 				<h:outputText value="#{pessoa.mae.nomeCompleto}" />
 			</p:column>
 			<p:column>
-				<p:commandButton id="botaoExcluir" value="#{msgs.excluir}"  actionListener="#{pessoaController.selecionarPessoa(pessoa)}" oncomplete="'#{pessoaController.pessoaPossuiFilhos(pessoa)}' == 'true' ? PF('widgetVarDialogConfirmacaoExclucaoComFilhos').show(): PF('widgetVarDialogConfirmacaoExclucaoSemFilhos').show()" />
+				<h:panelGrid columns="2">
+					<p:commandButton id="botaoExcluir" value="#{msgs.excluir}" actionListener="#{filtroPessoaController.selecionarPessoa(pessoa)}" oncomplete="'#{filtroPessoaController.pessoaPossuiFilhos(pessoa)}' == 'true' ? PF('widgetVarDialogConfirmacaoExclucaoComFilhos').show(): PF('widgetVarDialogConfirmacaoExclucaoSemFilhos').show()" />
+					<p:button id="botaoAlterar" value="#{msgs.alterar}" outcome="pessoa">
+						<f:param name="idPessoa" value="#{pessoa.id}" />
+					</p:button>
+				</h:panelGrid>
 			</p:column>
 		</p:dataTable>
-		<p:dialog  header="#{msgs.pedidoDeConfirmacao}" widgetVar="widgetVarDialogConfirmacaoExclucaoSemFilhos" height="150">
+
+		<p:button id="botaoIncluirRodape" value="#{msgs.incluir}" outcome="pessoa.xhtml" />
+
+		<p:dialog header="#{msgs.pedidoDeConfirmacao}" widgetVar="widgetVarDialogConfirmacaoExclucaoSemFilhos" height="150">
 			<h:panelGrid columns="1" cellpadding="10">
 				<h:outputText value="#{msgs.DESEJA_EXCLUIR_PESSOA}" />
 				<h:panelGrid columns="2" cellpadding="10">
-					<p:commandButton value="#{msgs.sim}" actionListener="#{pessoaController.excluir()}" update="tablePessoa" oncomplete="PF('widgetVarDialogConfirmacaoExclucaoSemFilhos').hide()"/>
+					<p:commandButton value="#{msgs.sim}" actionListener="#{filtroPessoaController.excluir()}" update="tablePessoa" oncomplete="PF('widgetVarDialogConfirmacaoExclucaoSemFilhos').hide()" />
 					<p:commandButton value="#{msgs.nao}" onclick="PF('widgetVarDialogConfirmacaoExclucaoSemFilhos').hide()" />
 				</h:panelGrid>
 			</h:panelGrid>
@@ -62,7 +80,7 @@
 			<h:panelGrid columns="1" cellpadding="10">
 				<h:outputText value="#{msgs.PESSOA_POSSUI_FILHOS_QUE_SERAO_EXCLUIDOS_RECURSIVAMENTE}" />
 				<h:panelGrid columns="2" cellpadding="10">
-					<p:commandButton value="#{msgs.sim}" actionListener="#{pessoaController.excluir()}" update="tablePessoa" oncomplete="PF('widgetVarDialogConfirmacaoExclucaoComFilhos').hide()"/>
+					<p:commandButton value="#{msgs.sim}" actionListener="#{filtroPessoaController.excluir()}" update="tablePessoa" oncomplete="PF('widgetVarDialogConfirmacaoExclucaoComFilhos').hide()" />
 					<p:commandButton value=" #{msgs.nao}" onclick="PF('widgetVarDialogConfirmacaoExclucaoComFilhos').hide()" />
 				</h:panelGrid>
 			</h:panelGrid>

@@ -11,6 +11,8 @@
 				Pessoa p 
 			where
 				p.cpf = :cpf
+			and
+				p.id != :idPessoa
 		</query>
 	</named-query>
 

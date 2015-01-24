@@ -23,14 +23,17 @@ public class PessoaServiceEJB implements PessoaService {
 
     @Override
     public void inserir(Pessoa pessoa) throws NegocioException {
-	if (contarPessoasComMesmoCpf(pessoa.getCpf()) > 0) {
+	if (contarPessoasComMesmoCpf(pessoa.getId(), pessoa.getCpf()) > 0) {
 	    throw new NegocioException(IdentificadorNegocioExceptions.PESSOAS_COM_CPFS_IGUAIS);
 	}
 	if (mesmaPaternidade(pessoa.getPai(), pessoa.getMae())) {
 	    throw new NegocioException(IdentificadorNegocioExceptions.PAIS_SAO_IRMAOS);
 	}
-
-	entityManager.persist(pessoa);
+	if(pessoa.getId() == null){
+	    entityManager.persist(pessoa);
+	}else{
+	    entityManager.merge(pessoa);	    
+	}
 	entityManager.flush();
     }
 
@@ -54,8 +57,9 @@ public class PessoaServiceEJB implements PessoaService {
 	return false;
     }
 
-    private Long contarPessoasComMesmoCpf(String cpf) {
+    private Long contarPessoasComMesmoCpf(Long idPessoa, String cpf) {
 	Query query = entityManager.createNamedQuery(IdentificadorQueries.CONTA_PESSOAS_MESMO_CPF.name());
+	query.setParameter("idPessoa", idPessoa);
 	query.setParameter("cpf", cpf);
 	return (Long) query.getSingleResult();
     }
@@ -76,7 +80,6 @@ public class PessoaServiceEJB implements PessoaService {
 
     @Override
     public void excluir(Pessoa pessoa) {
-	
 
 	Query queryListaFilhosPessoa = entityManager.createNamedQuery(IdentificadorQueries.LISTA_FILHOS_PESSOA.name());
 	queryListaFilhosPessoa.setParameter("idPai", pessoa.getId());
@@ -105,7 +108,7 @@ public class PessoaServiceEJB implements PessoaService {
 	    query.setParameter("cpf", filtroListagemPessoasDTO.getCpf());
 	}
 	if (filtroListagemPessoasDTO.getNomeMaeOuPai() != null && !filtroListagemPessoasDTO.getNomeMaeOuPai().trim().isEmpty()) {
-	    query.setParameter("nomeMaeOuPai", "%" + filtroListagemPessoasDTO.getNomeMaeOuPai().toUpperCase() +"%");
+	    query.setParameter("nomeMaeOuPai", "%" + filtroListagemPessoasDTO.getNomeMaeOuPai().toUpperCase() + "%");
 	}
 	if (filtroListagemPessoasDTO.getDataInicialAniversario() != null) {
 	    query.setParameter("dataInicialAniversario", filtroListagemPessoasDTO.getDataInicialAniversario());
@@ -144,13 +147,13 @@ public class PessoaServiceEJB implements PessoaService {
 	stringBuilderQueryListagemPessoas.append(instrucaoParaListarOuContar);
 	stringBuilderQueryListagemPessoas.append("from  ");
 	stringBuilderQueryListagemPessoas.append("		Pessoa p ");
-	
+
 	if (deveContar) {
 	    stringBuilderQueryListagemPessoas.append("		left join p.pai  pai ");
 	    stringBuilderQueryListagemPessoas.append("		left join p.mae mae ");
-	}else{
+	} else {
 	    stringBuilderQueryListagemPessoas.append("		left join fetch p.pai pai ");
-	    stringBuilderQueryListagemPessoas.append("		left join fetch p.mae mae ");	    
+	    stringBuilderQueryListagemPessoas.append("		left join fetch p.mae mae ");
 	}
 	List<Object> listArgumentosPreenchidos = new ArrayList<>();
 	listArgumentosPreenchidos.add(filtroListagemPessoasDTO.getCpf());
@@ -166,7 +169,7 @@ public class PessoaServiceEJB implements PessoaService {
 		break;
 	    }
 	}
-	
+
 	if (todosArgumentosNulos) {
 	    return stringBuilderQueryListagemPessoas.toString();
 	}

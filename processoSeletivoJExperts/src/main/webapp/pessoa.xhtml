@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
+<h:head></h:head>
+<body>
+	<f:metadata>
+		<f:viewParam name="idPessoa" value="#{cadastroPessoaController.idPessoa}" />
+	</f:metadata>
+	<p:growl id="message" for="" />
+	<h:form>
+		<p:panel header="#{cadastroPessoaController.tituloPagina} " style="margin-bottom:20px">
+			<h:panelGrid columns="3" cellpadding="10">
+
+				<p:outputLabel value="#{msgs.nome}" for="inputTextNomePessoa" />
+				<p:inputText id="inputTextNomePessoa" value="#{cadastroPessoaController.pessoa.nomeCompleto}" maxlength="150" required="true" requiredMessage="#{msgs.essaCampoDeveSerInformado}" />
+				<p:message for="inputTextNomePessoa" />
+
+				<p:outputLabel for="inputMaskCpf" value="#{msgs.cpf}" />
+				<p:inputMask id="inputMaskCpf" value="#{cadastroPessoaController.pessoa.cpf}" mask="999.999.999-99" required="true" requiredMessage="#{msgs.essaCampoDeveSerInformado}">
+					<p:ajax event="blur" process="inputMaskCpf" />
+				</p:inputMask>
+				<p:message for="inputMaskCpf" />
+
+				<p:outputLabel for="selectBoxGenero" value="#{msgs.genero}" required="true" />
+				<p:selectOneMenu id="selectBoxGenero" value="#{cadastroPessoaController.pessoa.genero}">
+					<f:selectItem itemLabel="#{msgs.selecione}" />
+					<f:selectItems value="#{cadastroPessoaController.generos}" />
+				</p:selectOneMenu>
+				<p:message for="selectBoxGenero" />
+
+				<p:outputLabel for="calendarDataAniversario" value="#{msgs.dataAniversario}" />
+				<p:calendar id="calendarDataAniversario" value="#{cadastroPessoaController.pessoa.dataNascimento}" pattern="dd-MM-yyyy" mask="true" required="true" requiredMessage="#{msgs.essaCampoDeveSerInformado}" />
+				<p:message for="calendarDataAniversario" />
+
+				<p:outputLabel value="#{msgs.municipio}" for="inputTextMunicipio" />
+				<p:inputText id="inputTextMunicipio" value="#{cadastroPessoaController.pessoa.municipioNascimento}" maxlength="150" required="true" requiredMessage="#{msgs.essaCampoDeveSerInformado}" />
+				<p:message for="inputTextMunicipio" />
+
+				<p:outputLabel value="#{msgs.uf}" for="inputTextUf" />
+				<p:inputText id="inputTextUf" value="#{cadastroPessoaController.pessoa.ufNascimento}" maxlength="2" requiredMessage="#{msgs.essaCampoDeveSerInformado}" />
+				<p:message for="inputTextUf" />
+
+				<p:outputLabel for="inputTextDddCelular" value="#{msgs.telefoneCelular}" />
+				<h:panelGrid columns="5">
+					<p:inputText id="inputTextDddCelular" value="#{cadastroPessoaController.pessoa.dddTelefoneCelular}" maxlength="2" style="width: 20px" required="true" requiredMessage="${msgs.dddDeveSerInformado}" />
+					<h:outputText value="-" />
+					<p:inputText id="inputTextPrefixoTelefoneCelular" value="#{cadastroPessoaController.pessoa.prefixoTelefoneCelular}" maxlength="5" style="width: 50px" required="true" requiredMessage="${msgs.prefixoDeveSerInformado}" />
+					<h:outputText value="-" />
+					<p:inputText id="inputTextSufixoTelefoneCelular" value="#{cadastroPessoaController.pessoa.sufixoTelefoneCelular}" maxlength="4" style="width: 50px" required="true"  requiredMessage="${msgs.sufixoDeveSerInformado}"/>
+				</h:panelGrid>
+				<h:panelGrid columns="3">
+					<p:message for="inputTextDddCelular" />
+					<p:message for="inputTextPrefixoTelefoneCelular" />
+					<p:message for="inputTextSufixoTelefoneCelular" />
+				</h:panelGrid>
+
+				<p:outputLabel for="inputTextDddFixo" value="#{msgs.telefoneFixo}" />
+				<h:panelGrid columns="5">
+					<p:inputText id="inputTextDddFixo" value="#{cadastroPessoaController.pessoa.dddTelefoneFixo}" maxlength="2" style="width: 20px" />
+					<h:outputText value="-" />
+					<p:inputText id="inputTextPrefixoTelefoneFixo" value="#{cadastroPessoaController.pessoa.prefixoTelefoneFixo}" maxlength="4" style="width: 50px" />
+					<h:outputText value="-" />
+					<p:inputText id="inputTextSufixoTelefoneFixo" value="#{cadastroPessoaController.pessoa.sufixoTelefoneFixo}" maxlength="4" style="width: 50px" />
+				</h:panelGrid>
+				<h:panelGrid columns="3">
+					<p:message for="inputTextDddFixo" />
+					<p:message for="inputTextPrefixoTelefoneFixo" />
+					<p:message for="inputTextSufixoTelefoneFixo" />
+				</h:panelGrid>
+
+				<p:commandButton value="#{msgs.cadastrar}" action="#{cadastroPessoaController.cadastrar}" ajax="false" />
+
+			</h:panelGrid>
+		</p:panel>
+	</h:form>
+</body>
+</html>

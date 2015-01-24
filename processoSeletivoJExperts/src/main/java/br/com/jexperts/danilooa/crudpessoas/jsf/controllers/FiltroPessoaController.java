@@ -20,7 +20,7 @@ import br.com.jexperts.danilooa.crudpessoas.service.PessoaService;
 
 @ManagedBean
 @ViewScoped
-public class PessoaController implements Serializable {
+public class FiltroPessoaController implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
