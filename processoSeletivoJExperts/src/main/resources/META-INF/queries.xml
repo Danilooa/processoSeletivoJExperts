@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd "
 >
-	<named-query name="CONTA_PESSOAS_MESMO_CPF">
+	<named-query name="CONTA_PESSOAS_MESMO_CPF_QUANDO_PESSOA_POSSUI_ID">
 		<query>
 			select 
 				count(p) 
@@ -13,6 +13,17 @@
 				p.cpf = :cpf
 			and
 				p.id != :idPessoa
+		</query>
+	</named-query>
+
+	<named-query name="CONTA_PESSOAS_MESMO_CPF">
+		<query>
+			select 
+				count(p) 
+			from 
+				Pessoa p 
+			where
+				p.cpf = :cpf
 		</query>
 	</named-query>
 

@@ -29,10 +29,11 @@ public class PessoaServiceEJB implements PessoaService {
 	if (mesmaPaternidade(pessoa.getPai(), pessoa.getMae())) {
 	    throw new NegocioException(IdentificadorNegocioExceptions.PAIS_SAO_IRMAOS);
 	}
-	if(pessoa.getId() == null){
+
+	if (pessoa.getId() == null) {
 	    entityManager.persist(pessoa);
-	}else{
-	    entityManager.merge(pessoa);	    
+	} else {
+	    entityManager.merge(pessoa);
 	}
 	entityManager.flush();
     }
@@ -58,9 +59,21 @@ public class PessoaServiceEJB implements PessoaService {
     }
 
     private Long contarPessoasComMesmoCpf(Long idPessoa, String cpf) {
-	Query query = entityManager.createNamedQuery(IdentificadorQueries.CONTA_PESSOAS_MESMO_CPF.name());
-	query.setParameter("idPessoa", idPessoa);
-	query.setParameter("cpf", cpf);
+
+	Query query = null;
+
+	if (idPessoa == null) {
+	    query = entityManager.createNamedQuery(IdentificadorQueries.CONTA_PESSOAS_MESMO_CPF.name());
+	    query.setParameter("cpf", cpf);
+	}
+
+	
+	if (idPessoa != null) {
+	    query = entityManager.createNamedQuery(IdentificadorQueries.CONTA_PESSOAS_MESMO_CPF_QUANDO_PESSOA_POSSUI_ID.name());
+	    query.setParameter("idPessoa", idPessoa);
+	    query.setParameter("cpf", cpf);
+	}
+	
 	return (Long) query.getSingleResult();
     }
 
