@@ -1,11 +1,7 @@
 package br.com.jexperts.danilooa.crudpessoas.jsf.controllers;
 
-import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 
 import javax.ejb.EJB;
@@ -15,11 +11,9 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 
 import br.com.jexperts.danilooa.crudpessoas.entity.Pessoa;
 import br.com.jexperts.danilooa.crudpessoas.enums.GeneroEnum;
@@ -72,25 +66,20 @@ public class CadastroPessoaController implements Serializable {
 	return outcome;
     }
 
-    public void tratarUploadImagem(FileUploadEvent event) throws IOException {
+    public void tratarUploadImagem(FileUploadEvent event) {
 	byte[] imagem = new byte[(int) event.getFile().getSize()];
 	pessoa.setImagem(imagem);
-	DataInputStream dataInputStream = new DataInputStream(event.getFile().getInputstream());
-	dataInputStream.readFully(imagem);
+	DataInputStream dataInputStream = null;;
+	try {
+	    dataInputStream = new DataInputStream(event.getFile().getInputstream());
+	    dataInputStream.readFully(imagem);
+	} catch (IOException e) {
+	    throw new RuntimeException(e);
+	}
+	FacesContext facesContext = FacesContext.getCurrentInstance();
+	HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
+	session.setAttribute("imagem", imagem);
 	JavaServerFacesUtils.adicionarMensagemInformacao(Mensagens.IMAGEM_ATUALIZADA_COM_SUCESSO.name());
-    }
-
-    public StreamedContent getImagem() {
-	getPessoa();
-	InputStream inputStreaImagem = null;
-	if (pessoa.getImagem() == null) {
-	    inputStreaImagem = Thread.currentThread().getContextClassLoader().getResourceAsStream("imagemNaoCadastrada.jpg");
-	}
-	if (pessoa.getImagem() != null) {
-	    inputStreaImagem = new ByteArrayInputStream(pessoa.getImagem());
-	}
-	DefaultStreamedContent defaultStreamedContent = new DefaultStreamedContent(inputStreaImagem , "image/png");
-	return defaultStreamedContent;
     }
 
     public Long getIdPessoa() {

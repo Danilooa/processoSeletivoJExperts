@@ -6,7 +6,7 @@
 			$("[id$='botaoIncluirTopo']").appendTo("[id$='tablePessoa_paginator_top']");
 			$("[id$='botaoIncluirRodape']").appendTo("[id$='tablePessoa_paginator_bottom']");
 		});
-</script>
+	</script>
 </h:head>
 <body>
 	<p:growl id="message" showDetail="true" />
@@ -43,6 +43,9 @@
 		<p:button id="botaoIncluirTopo" value="#{msgs.incluir}" outcome="pessoa.xhtml" />
 
 		<p:dataTable id="tablePessoa" var="pessoa" value="#{filtroPessoaController.lazyModel}" paginator="true" rows="10" paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}" rowsPerPageTemplate="10" emptyMessage="#{msgs.naoAPessoasCadastradas}" lazy="true">
+			<p:column>
+				<img src="ProcessadorImagemServlet?idPessoa=#{pessoa.id}" width="100" height="100"/>
+			</p:column>
 			<p:column headerText="#{msgs.nome}">
 				<h:outputText value="#{pessoa.nomeCompleto}" />
 			</p:column>

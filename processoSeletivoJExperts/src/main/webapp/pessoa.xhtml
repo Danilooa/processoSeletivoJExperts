@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
-<h:head></h:head>
+<h:head>
+</h:head>
 <body>
 	<f:metadata>
 		<f:viewParam name="idPessoa" value="#{cadastroPessoaController.idPessoa}" />
@@ -10,11 +11,12 @@
 		<p:growl id="messages" for="exibirGrowl" />
 		<p:panel header="#{cadastroPessoaController.tituloPagina} " style="margin-bottom:20px">
 			<h:panelGrid columns="3" cellpadding="10">
+				<p:outputLabel value="#{msgs.imagem}" />
+				<img id="imagem" src="ProcessadorImagemServlet?idPessoa=#{cadastroPessoaController.idPessoa}" style="margin-left: 100px;" />
+				<p:fileUpload fileUploadListener="#{cadastroPessoaController.tratarUploadImagem}" mode="advanced" update="messages" oncomplete="$('#imagem').attr('src', 'ProcessadorImagemServlet');" auto="true" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+			</h:panelGrid>
+			<h:panelGrid id="panelGridCamposForm" columns="3" cellpadding="10">
 
-				<p:outputLabel value="#{msgs.imagem}" for="graphicImage" />
-				<p:graphicImage id="graphicImage" value="#{cadastroPessoaController.imagem}"/>
-				<p:fileUpload id="fileUploadImagem" fileUploadListener="#{cadastroPessoaController.tratarUploadImagem}" label="#{msgs.atualizarImagem}" mode="advanced" update="messages,graphicImage" auto="true" sizeLimit="500000" allowTypes="/(\.|\/)(jpe?g|png)$/" />
-				
 				<p:outputLabel value="#{msgs.nome}" for="inputTextNomePessoa" />
 				<p:inputText id="inputTextNomePessoa" value="#{cadastroPessoaController.pessoa.nomeCompleto}" maxlength="150" required="true" requiredMessage="#{msgs.essaCampoDeveSerInformado}" />
 				<p:message for="inputTextNomePessoa" />
@@ -72,7 +74,7 @@
 					<p:message for="inputTextSufixoTelefoneFixo" />
 				</h:panelGrid>
 
-				<p:commandButton value="#{msgs.cadastrar}" action="#{cadastroPessoaController.cadastrar}" ajax="false" />
+				<p:commandButton value="#{msgs.cadastrar}" process="panelGridCamposForm" update="panelGridCamposForm,messages" action="#{cadastroPessoaController.cadastrar}" ajax="true" />
 
 			</h:panelGrid>
 		</p:panel>
