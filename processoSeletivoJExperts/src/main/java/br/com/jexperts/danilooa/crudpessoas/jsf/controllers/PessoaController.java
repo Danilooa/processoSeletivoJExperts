@@ -4,76 +4,101 @@ import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 
+import org.primefaces.component.datatable.DataTable;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 
 import br.com.jexperts.danilooa.crudpessoas.dto.FiltroListagemPessoasDTO;
 import br.com.jexperts.danilooa.crudpessoas.entity.Pessoa;
+import br.com.jexperts.danilooa.crudpessoas.enums.Mensagens;
 import br.com.jexperts.danilooa.crudpessoas.jsf.datamodels.PessoaLazyDataModel;
+import br.com.jexperts.danilooa.crudpessoas.jsf.utils.JavaServerFacesUtils;
 import br.com.jexperts.danilooa.crudpessoas.service.PessoaService;
-
 
 @ManagedBean
 @ViewScoped
 public class PessoaController implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @EJB
     private PessoaService pessoaService;
 
     private LazyDataModel<Pessoa> lazyModel;
     private FiltroListagemPessoasDTO filtroListagemPessoasDTO;
-    
+
     private Pessoa pessoaSelecionada;
-     
+    
+    private DataTable dataTable;
+
     @PostConstruct
     public void init() {
 	filtroListagemPessoasDTO = new FiltroListagemPessoasDTO();
-	filtroListagemPessoasDTO.setIndexDoPrimeiraRegistroDaPagina(0);
-	filtroListagemPessoasDTO.setQuantidadeDeRegistrosPorPagina(10);
-        lazyModel = new PessoaLazyDataModel(pessoaService, filtroListagemPessoasDTO);
-    }
- 
-    public LazyDataModel<Pessoa> getLazyModel() {
-        return lazyModel;
-    }
- 
-    public Pessoa getPessoaSelecionada() {
-        return pessoaSelecionada;
-    }
- 
-    public FiltroListagemPessoasDTO getFiltroListagemPessoasDTO() {
-        return filtroListagemPessoasDTO;
+	lazyModel = new PessoaLazyDataModel(pessoaService, filtroListagemPessoasDTO);
+	filtroListagemPessoasDTO = filtroListagemPessoasDTO.clone();
     }
 
-    public void setPessoaSelecionada(Pessoa pessoaSelecionada) {
-        this.pessoaSelecionada = pessoaSelecionada;
+    public LazyDataModel<Pessoa> getLazyModel() {
+	return lazyModel;
+    }
+
+    public FiltroListagemPessoasDTO getFiltroListagemPessoasDTO() {
+	return filtroListagemPessoasDTO;
     }
 
     public void setFiltroListagemPessoasDTO(FiltroListagemPessoasDTO filtroListagemPessoasDTO) {
-        this.filtroListagemPessoasDTO = filtroListagemPessoasDTO;
+	this.filtroListagemPessoasDTO = filtroListagemPessoasDTO;
     }
 
     public void setLazyModel(LazyDataModel<Pessoa> lazyModel) {
-        this.lazyModel = lazyModel;
+	this.lazyModel = lazyModel;
     }
 
-    public void setSelectedCar(Pessoa pessoaSelecionada) {
-        this.pessoaSelecionada = pessoaSelecionada;
-    }
-     
     public void onRowSelect(SelectEvent event) {
-        FacesMessage msg = new FacesMessage("Car Selected", ""+((Pessoa) event.getObject()).getId());
-        FacesContext.getCurrentInstance().addMessage(null, msg);
+	pessoaSelecionada = (Pessoa) event.getObject();
     }
 
-    public void filtrarPessoas(){
-	System.out.println(filtroListagemPessoasDTO.getCpf());
+    public void selecionarPessoa(Pessoa pessoa){
+	this.pessoaSelecionada = pessoa;
     }
+    
+    public void listar(){
+	filtroListagemPessoasDTO.setIndexDoPrimeiraRegistroDaPagina(0);
+	lazyModel = new PessoaLazyDataModel(pessoaService, filtroListagemPessoasDTO);
+	filtroListagemPessoasDTO = filtroListagemPessoasDTO.clone();
+	dataTable.reset();	
+    }
+    
+    public void excluir() {
+	pessoaService.excluir(pessoaSelecionada);
+	JavaServerFacesUtils.adicionarMensagem(Mensagens.EXCLUSAO_REALIZADA_COM_SUCESSO.name());
+	lazyModel.setRowCount(lazyModel.getRowCount() - 1);
+    }
+
+    public String pessoaPossuiFilhos(Pessoa pessoa) {
+	return pessoaService.possuiFilhos(pessoa.getId()).toString();
+    }
+
+    public String getMessagemConfirmacaoExclusao() {
+	if (pessoaSelecionada == null) {
+	    return "";
+	}
+	if (pessoaService.possuiFilhos(pessoaSelecionada.getId())) {
+	    return Mensagens.PESSOA_POSSUI_FILHOS_QUE_SERAO_EXCLUIDOS_RECURSIVAMENTE.name();
+	}
+	return Mensagens.DESEJA_EXCLUIR_PESSOA.name();
+    }
+
+    public DataTable getDataTable() {
+        return dataTable;
+    }
+
+    public void setDataTable(DataTable dataTable) {
+        this.dataTable = dataTable;
+    }
+    
+    
 }

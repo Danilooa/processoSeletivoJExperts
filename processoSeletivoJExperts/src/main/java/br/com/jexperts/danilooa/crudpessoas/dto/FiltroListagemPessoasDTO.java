@@ -2,7 +2,7 @@ package br.com.jexperts.danilooa.crudpessoas.dto;
 
 import java.util.Date;
 
-public class FiltroListagemPessoasDTO {
+public class FiltroListagemPessoasDTO implements Cloneable {
 
     private String nomePessoa;
     private Date dataInicialAniversario;
@@ -68,4 +68,16 @@ public class FiltroListagemPessoasDTO {
 	this.indexDoPrimeiraRegistroDaPagina = indexDoPrimeiraRegistroDaPagina;
     }
 
+    @Override
+    public FiltroListagemPessoasDTO clone()  {
+	FiltroListagemPessoasDTO filtroListagemPessoasDTO = new FiltroListagemPessoasDTO();
+	filtroListagemPessoasDTO.setDataInicialAniversario(this.getDataInicialAniversario());
+	filtroListagemPessoasDTO.setDataFinalAniversario(this.getDataFinalAniversario());
+	filtroListagemPessoasDTO.setCpf(this.getCpf());
+	filtroListagemPessoasDTO.setIndexDoPrimeiraRegistroDaPagina(this.getIndexDoPrimeiraRegistroDaPagina());
+	filtroListagemPessoasDTO.setNomeMaeOuPai(this.getNomeMaeOuPai());
+	filtroListagemPessoasDTO.setQuantidadeDeRegistrosPorPagina(this.getQuantidadeDeRegistrosPorPagina());
+	filtroListagemPessoasDTO.setNomePessoa(this.getNomePessoa());
+	return filtroListagemPessoasDTO;
+    }
 }

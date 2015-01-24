@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
 <h:head></h:head>
 <body>
+	<p:growl id="message" showDetail="true" />
 	<h:form>
 		<p:panel header="Filtro de pessoas" style="margin-bottom:20px">
 			<h:panelGrid columns="3" cellpadding="10">
@@ -9,13 +10,13 @@
 				<p:outputLabel value="#{msgs.nome}" for="inputTextNomePessoa" />
 				<p:inputText id="inputTextNomePessoa" value="#{pessoaController.filtroListagemPessoasDTO.nomePessoa}" maxlength="150" />
 				<p:message for="inputTextNomePessoa" />
-				
+
 				<p:outputLabel for="calendarDataInicial" value="#{msgs.dataInicial}" />
-				<p:calendar id="calendarDataInicial" value="#{pessoaController.filtroListagemPessoasDTO.dataInicialAniversario}" pattern="dd-MM-yyyy" mask="true"/>
+				<p:calendar id="calendarDataInicial" value="#{pessoaController.filtroListagemPessoasDTO.dataInicialAniversario}" pattern="dd-MM-yyyy" mask="true" />
 				<p:message for="calendarDataInicial" />
 
 				<p:outputLabel for="calendarDataFinal" value="#{msgs.dataFinal}" />
-				<p:calendar id="calendarDataFinal" value="#{pessoaController.filtroListagemPessoasDTO.dataFinalAniversario}" pattern="dd-MM-yyyy" mask="true"/>
+				<p:calendar id="calendarDataFinal" value="#{pessoaController.filtroListagemPessoasDTO.dataFinalAniversario}" pattern="dd-MM-yyyy" mask="true" />
 				<p:message for="calendarDataFinal" />
 
 				<p:outputLabel for="inputTextNomePaiOuMae" value="#{msgs.maeOuPai}" />
@@ -23,15 +24,15 @@
 				<p:message for="inputTextNomePaiOuMae" />
 
 				<p:outputLabel for="inputMaskCpf" value="#{msgs.cpf}" />
-				<p:inputMask id="inputMaskCpf" value="#{pessoaController.filtroListagemPessoasDTO.cpf}" mask="999.999.999-99" />
+				<p:inputMask id="inputMaskCpf" value="#{pessoaController.filtroListagemPessoasDTO.cpf}" mask="999.999.999-99">
+					<p:ajax  event="blur" process="inputMaskCpf"/>
+				</p:inputMask>
 				<p:message for="inputMaskCpf" />
 
 			</h:panelGrid>
-			<p:commandButton value="#{msgs.pesquisar}" action="#{pessoaController.filtrarPessoas}" ajax="false" />
+			<p:commandButton value="#{msgs.pesquisar}" actionListener="#{pessoaController.listar}" update="tablePessoa" />
 		</p:panel>
-
-		<p:dataTable var="pessoa" value="#{pessoaController.lazyModel}" paginator="true" rows="10" paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}" rowsPerPageTemplate="10" selectionMode="single" emptyMessage="#{msgs.naoAPessoasCadastradas}" selection="#{pessoaController.pessoaSelecionada}" id="tablePessoa" lazy="true">
-			<p:ajax event="rowSelect" listener="#{pessoaController.onRowSelect}" />
+		<p:dataTable id="tablePessoa" var="pessoa" value="#{pessoaController.lazyModel}"  paginator="true" rows="10" paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}" rowsPerPageTemplate="10"  emptyMessage="#{msgs.naoAPessoasCadastradas}" lazy="true">
 			<p:column headerText="#{msgs.nome}">
 				<h:outputText value="#{pessoa.nomeCompleto}" />
 			</p:column>
@@ -39,12 +40,33 @@
 				<h:outputText value="#{pessoa.cpf}" />
 			</p:column>
 			<p:column headerText="#{msgs.telefoneCelular}">
-				<h:outputText value="#{pessoa.telefoneCelularFormatado()}" />				
+				<h:outputText value="#{pessoa.telefoneCelularFormatado()}" />
 			</p:column>
 			<p:column headerText="#{msgs.nomeMae}">
-				<h:outputText value="#{pessoa.mae.nomeCompleto}" />				
+				<h:outputText value="#{pessoa.mae.nomeCompleto}" />
+			</p:column>
+			<p:column>
+				<p:commandButton id="botaoExcluir" value="#{msgs.excluir}"  actionListener="#{pessoaController.selecionarPessoa(pessoa)}" oncomplete="'#{pessoaController.pessoaPossuiFilhos(pessoa)}' == 'true' ? PF('widgetVarDialogConfirmacaoExclucaoComFilhos').show(): PF('widgetVarDialogConfirmacaoExclucaoSemFilhos').show()" />
 			</p:column>
 		</p:dataTable>
+		<p:dialog  header="#{msgs.pedidoDeConfirmacao}" widgetVar="widgetVarDialogConfirmacaoExclucaoSemFilhos" height="150">
+			<h:panelGrid columns="1" cellpadding="10">
+				<h:outputText value="#{msgs.DESEJA_EXCLUIR_PESSOA}" />
+				<h:panelGrid columns="2" cellpadding="10">
+					<p:commandButton value="#{msgs.sim}" actionListener="#{pessoaController.excluir()}" update="tablePessoa" oncomplete="PF('widgetVarDialogConfirmacaoExclucaoSemFilhos').hide()"/>
+					<p:commandButton value="#{msgs.nao}" onclick="PF('widgetVarDialogConfirmacaoExclucaoSemFilhos').hide()" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</p:dialog>
+		<p:dialog header="#{msgs.pedidoDeConfirmacao}" widgetVar="widgetVarDialogConfirmacaoExclucaoComFilhos">
+			<h:panelGrid columns="1" cellpadding="10">
+				<h:outputText value="#{msgs.PESSOA_POSSUI_FILHOS_QUE_SERAO_EXCLUIDOS_RECURSIVAMENTE}" />
+				<h:panelGrid columns="2" cellpadding="10">
+					<p:commandButton value="#{msgs.sim}" actionListener="#{pessoaController.excluir()}" update="tablePessoa" oncomplete="PF('widgetVarDialogConfirmacaoExclucaoComFilhos').hide()"/>
+					<p:commandButton value=" #{msgs.nao}" onclick="PF('widgetVarDialogConfirmacaoExclucaoComFilhos').hide()" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</p:dialog>
 	</h:form>
 </body>
 </html>

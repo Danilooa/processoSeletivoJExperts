@@ -11,6 +11,9 @@ import br.com.jexperts.danilooa.crudpessoas.entity.Pessoa;
 import br.com.jexperts.danilooa.crudpessoas.service.PessoaService;
 
 public class PessoaLazyDataModel extends LazyDataModel<Pessoa> {
+
+    private static final long serialVersionUID = 1L;
+
     private PessoaService pessoaService;
     private FiltroListagemPessoasDTO filtroListagemPessoasDTO;
 
@@ -32,6 +35,7 @@ public class PessoaLazyDataModel extends LazyDataModel<Pessoa> {
     @Override
     public List<Pessoa> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
 	filtroListagemPessoasDTO.setIndexDoPrimeiraRegistroDaPagina(first);
+	filtroListagemPessoasDTO.setQuantidadeDeRegistrosPorPagina(pageSize);
 	List<Pessoa> listaPessoas = pessoaService.listarPessoas(filtroListagemPessoasDTO);
 	int dataSize = Integer.valueOf("" + pessoaService.contaTotalPessoas(filtroListagemPessoasDTO));
 	this.setRowCount(dataSize);

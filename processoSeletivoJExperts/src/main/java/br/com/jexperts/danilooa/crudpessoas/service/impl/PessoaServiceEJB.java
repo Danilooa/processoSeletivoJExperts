@@ -76,6 +76,7 @@ public class PessoaServiceEJB implements PessoaService {
 
     @Override
     public void excluir(Pessoa pessoa) {
+	
 
 	Query queryListaFilhosPessoa = entityManager.createNamedQuery(IdentificadorQueries.LISTA_FILHOS_PESSOA.name());
 	queryListaFilhosPessoa.setParameter("idPai", pessoa.getId());
@@ -85,7 +86,7 @@ public class PessoaServiceEJB implements PessoaService {
 	for (Pessoa filho : listFilhosPessoa) {
 	    excluir(filho);
 	}
-
+	pessoa = entityManager.find(Pessoa.class, pessoa.getId());
 	entityManager.remove(pessoa);
     }
 
