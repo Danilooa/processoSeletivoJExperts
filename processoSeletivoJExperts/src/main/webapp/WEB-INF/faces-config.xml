@@ -1,15 +1,10 @@
 <?xml version="1.0"?>
 <faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
 	<application>
+		<message-bundle>br.com.jexperts.danilooa.crudpessoas.messages</message-bundle>
 		<resource-bundle>
-			<base-name>br.com.danilo.nailbar.messages</base-name>
+			<base-name>br.com.jexperts.danilooa.crudpessoas.applicationMessages</base-name>
 			<var>msgs</var>
 		</resource-bundle>
-
-		<
-<!-- 		<system-event-listener> -->
-<!-- 			<system-event-listener-class>br.com.danilo.nailbar.jsf.eventhandlers.ExceptionQueuedEventHandler</system-event-listener-class> -->
-<!-- 			<system-event-class>javax.faces.event.ExceptionQueuedEvent</system-event-class> -->
-<!-- 		</system-event-listener> -->
 	</application>
 </faces-config>

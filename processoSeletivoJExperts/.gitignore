@@ -3,3 +3,5 @@
 /.classpath
 /.project
 /.settings/
+/src/main/webapp/WEB-INF/.faces-config.xml.jsfdia
+/.tern-project

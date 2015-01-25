@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 import br.com.jexperts.danilooa.crudpessoas.enums.GeneroEnum;
@@ -22,6 +23,9 @@ public class Pessoa {
     private GeneroEnum genero;
     private Date dataNascimento;
     private String cpf;
+    private String email;
+    @Lob
+    private byte[] imagem;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idPai", referencedColumnName="id")
@@ -34,13 +38,9 @@ public class Pessoa {
     private String municipioNascimento;
     private String ufNascimento;
 
-    private String dddTelefoneCelular;
-    private String prefixoTelefoneCelular;
-    private String sufixoTelefoneCelular;
+    private String telefoneCelular;
 
-    private String dddTelefoneFixo;
-    private String prefixoTelefoneFixo;
-    private String sufixoTelefoneFixo;
+    private String telefoneFixo;
 
     public String getNomeCompleto() {
 	return nomeCompleto;
@@ -113,61 +113,37 @@ public class Pessoa {
     public void setUfNascimento(String ufNascimento) {
 	this.ufNascimento = ufNascimento;
     }
-
-    public String getDddTelefoneCelular() {
-	return dddTelefoneCelular;
+    
+    public byte[] getImagem() {
+        return imagem;
     }
 
-    public void setDddTelefoneCelular(String dddTelefoneCelular) {
-	this.dddTelefoneCelular = dddTelefoneCelular;
+    public String getTelefoneCelular() {
+        return telefoneCelular;
     }
 
-    public String getPrefixoTelefoneCelular() {
-	return prefixoTelefoneCelular;
+    public void setTelefoneCelular(String telefoneCelular) {
+        this.telefoneCelular = telefoneCelular;
     }
 
-    public void setPrefixoTelefoneCelular(String prefixoTelefoneCelular) {
-	this.prefixoTelefoneCelular = prefixoTelefoneCelular;
+    public String getTelefoneFixo() {
+        return telefoneFixo;
     }
 
-    public String getSufixoTelefoneCelular() {
-	return sufixoTelefoneCelular;
+    public void setTelefoneFixo(String telefoneFixo) {
+        this.telefoneFixo = telefoneFixo;
     }
 
-    public void setSufixoTelefoneCelular(String sufixoTelefoneCelular) {
-	this.sufixoTelefoneCelular = sufixoTelefoneCelular;
+    public void setImagem(byte[] imagem) {
+        this.imagem = imagem;
     }
 
-    public String getDddTelefoneFixo() {
-	return dddTelefoneFixo;
+    public String getEmail() {
+        return email;
     }
 
-    public void setDddTelefoneFixo(String dddTelefoneFixo) {
-	this.dddTelefoneFixo = dddTelefoneFixo;
-    }
-
-    public String getPrefixoTelefoneFixo() {
-	return prefixoTelefoneFixo;
-    }
-
-    public void setPrefixoTelefoneFixo(String prefixoTelefoneFixo) {
-	this.prefixoTelefoneFixo = prefixoTelefoneFixo;
-    }
-
-    public String getSufixoTelefoneFixo() {
-	return sufixoTelefoneFixo;
-    }
-
-    public void setSufixoTelefoneFixo(String sufixoTelefoneFixo) {
-	this.sufixoTelefoneFixo = sufixoTelefoneFixo;
-    }
-
-    @Override
-    public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((id == null) ? 0 : id.hashCode());
-	return result;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override

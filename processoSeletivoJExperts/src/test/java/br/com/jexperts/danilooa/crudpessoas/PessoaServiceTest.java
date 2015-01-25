@@ -50,25 +50,25 @@ public class PessoaServiceTest extends TransactionalTestCase {
     @Before
     public void prepatarTeste() {
 
-	avoMasculino = new PessoaDataBuilder().nomeCompleto("Avo Masculino").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("000.000.000-00").pai(null).mae(null).municipioNascimento("Municipio").ufNascimento("SP").dddTelefoneCelular("99").prefixoTelefoneCelular("9999").sufixoTelefoneCelular("9999").dddTelefoneFixo("99").prefixoTelefoneFixo("9999").sufixoTelefoneFixo("9999").getPessoa();
-	avoFeminino = new PessoaDataBuilder().nomeCompleto("Avo Feminino").sexo(GeneroEnum.FEMININO).dataNascimento(new Date()).cpf("111.111.111-11").pai(null).mae(null).municipioNascimento("Municipio").ufNascimento("SP").dddTelefoneCelular("99").prefixoTelefoneCelular("9999").sufixoTelefoneCelular("9999").dddTelefoneFixo("99").prefixoTelefoneFixo("9999").sufixoTelefoneFixo("9999").getPessoa();
-	pai = new PessoaDataBuilder().nomeCompleto("Pai").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("222.222.222-22").pai(avoMasculino).mae(avoFeminino).municipioNascimento("Municipio").ufNascimento("SP").dddTelefoneCelular("99").prefixoTelefoneCelular("9999").sufixoTelefoneCelular("9999").dddTelefoneFixo("99").prefixoTelefoneFixo("9999").sufixoTelefoneFixo("9999").getPessoa();
-	mae = new PessoaDataBuilder().nomeCompleto("Mae").sexo(GeneroEnum.FEMININO).dataNascimento(new Date()).cpf("333.333.333-33").pai(avoMasculino).mae(avoFeminino).municipioNascimento("Municipio").ufNascimento("SP").dddTelefoneCelular("99").prefixoTelefoneCelular("9999").sufixoTelefoneCelular("9999").dddTelefoneFixo("99").prefixoTelefoneFixo("9999").sufixoTelefoneFixo("9999").getPessoa();
+	avoMasculino = new PessoaDataBuilder().nomeCompleto("Avo Masculino").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("000.000.000-00").pai(null).mae(null).municipioNascimento("Municipio").ufNascimento("SP").telefoneCelular("99-99999-9999").telefoneFixo("99-9999-9999").getPessoa();
+	avoFeminino = new PessoaDataBuilder().nomeCompleto("Avo Feminino").sexo(GeneroEnum.FEMININO).dataNascimento(new Date()).cpf("111.111.111-11").pai(null).mae(null).municipioNascimento("Municipio").ufNascimento("SP").telefoneCelular("99-99999-9999").telefoneFixo("99-9999-9999").getPessoa();
+	pai = new PessoaDataBuilder().nomeCompleto("Pai").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("222.222.222-22").pai(avoMasculino).mae(avoFeminino).municipioNascimento("Municipio").ufNascimento("SP").telefoneCelular("99-99999-9999").telefoneFixo("99-9999-9999").getPessoa();
+	mae = new PessoaDataBuilder().nomeCompleto("Mae").sexo(GeneroEnum.FEMININO).dataNascimento(new Date()).cpf("333.333.333-33").pai(avoMasculino).mae(avoFeminino).municipioNascimento("Municipio").ufNascimento("SP").telefoneCelular("99-99999-9999").telefoneFixo("99-9999-9999").getPessoa();
 
     }
 
     @Deployment
     public static JavaArchive deploy() {
 
-	return createDeployment().addClass(PessoaDataBuilder.class).addClass(NegocioException.class).addClass(PessoaService.class).addClass(PessoaServiceEJB.class).addClass(AppConfig.class).addClass(Pessoa.class).addClass(GeneroEnum.class).addClass(IdentificadorQueries.class).addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml").addAsResource("META-INF/queries.xml", "META-INF/queries.xml").addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+	return createDeployment().addClass(PessoaDataBuilder.class).addClass(NegocioException.class).addClass(PessoaService.class).addClass(FiltroListagemPessoasDTO.class).addClass(PessoaServiceEJB.class).addClass(AppConfig.class).addClass(Pessoa.class).addClass(GeneroEnum.class).addClass(IdentificadorQueries.class).addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml").addAsResource("META-INF/queries.xml", "META-INF/queries.xml").addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
     }
 
     @Test
     public void deveInserirPessoasComCpfsDiferentes() {
 
-	Pessoa pessoa1 = new PessoaDataBuilder().nomeCompleto("Pessoa1").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("999.999.999-99").pai(null).mae(null).municipioNascimento("Municipio").ufNascimento("SP").dddTelefoneCelular("99").prefixoTelefoneCelular("9999").sufixoTelefoneCelular("9999").dddTelefoneFixo("99").prefixoTelefoneFixo("9999").sufixoTelefoneFixo("9999").getPessoa();
-	Pessoa pessoa2 = new PessoaDataBuilder().nomeCompleto("Pessoa2").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("888.888.888-88").pai(null).mae(null).municipioNascimento("Municipio").ufNascimento("SP").dddTelefoneCelular("99").prefixoTelefoneCelular("9999").sufixoTelefoneCelular("9999").dddTelefoneFixo("99").prefixoTelefoneFixo("9999").sufixoTelefoneFixo("9999").getPessoa();
+	Pessoa pessoa1 = new PessoaDataBuilder().nomeCompleto("Pessoa1").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("999.999.999-99").pai(null).mae(null).municipioNascimento("Municipio").ufNascimento("SP").telefoneCelular("99-99999-9999").telefoneFixo("99-9999-9999").getPessoa();
+	Pessoa pessoa2 = new PessoaDataBuilder().nomeCompleto("Pessoa2").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("888.888.888-88").pai(null).mae(null).municipioNascimento("Municipio").ufNascimento("SP").telefoneCelular("99-9999-9999").telefoneFixo("99-9999-9999").getPessoa();
 
 	try {
 
@@ -87,8 +87,8 @@ public class PessoaServiceTest extends TransactionalTestCase {
     public void naoDeveInserirPessoasComCpfsIguais() {
 
 	String cpf = "999.999.999-99";
-	Pessoa pessoa1 = new PessoaDataBuilder().nomeCompleto("Pessoa1").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf(cpf).pai(null).mae(null).municipioNascimento("Municipio").ufNascimento("SP").dddTelefoneCelular("99").prefixoTelefoneCelular("9999").sufixoTelefoneCelular("9999").dddTelefoneFixo("99").prefixoTelefoneFixo("9999").sufixoTelefoneFixo("9999").getPessoa();
-	Pessoa pessoa2 = new PessoaDataBuilder().nomeCompleto("Pessoa2").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf(cpf).pai(null).mae(null).municipioNascimento("Municipio").ufNascimento("SP").dddTelefoneCelular("99").prefixoTelefoneCelular("9999").sufixoTelefoneCelular("9999").dddTelefoneFixo("99").prefixoTelefoneFixo("9999").sufixoTelefoneFixo("9999").getPessoa();
+	Pessoa pessoa1 = new PessoaDataBuilder().nomeCompleto("Pessoa1").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf(cpf).pai(null).mae(null).municipioNascimento("Municipio").ufNascimento("SP").telefoneCelular("99-99999-9999").telefoneFixo("99-9999-9999").getPessoa();
+	Pessoa pessoa2 = new PessoaDataBuilder().nomeCompleto("Pessoa2").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf(cpf).pai(null).mae(null).municipioNascimento("Municipio").ufNascimento("SP").telefoneCelular("99-99999-9999").telefoneFixo("99-9999-9999").getPessoa();
 
 	try {
 
@@ -114,8 +114,8 @@ public class PessoaServiceTest extends TransactionalTestCase {
 	pessoaService.inserir(pai);
 	pessoaService.inserir(mae);
 
-	Pessoa irmao1 = new PessoaDataBuilder().nomeCompleto("Pessoa1").sexo(GeneroEnum.FEMININO).dataNascimento(new Date()).cpf("444.444.444-44").pai(avoMasculino).mae(avoFeminino).municipioNascimento("Municipio").ufNascimento("SP").dddTelefoneCelular("99").prefixoTelefoneCelular("9999").sufixoTelefoneCelular("9999").dddTelefoneFixo("99").prefixoTelefoneFixo("9999").sufixoTelefoneFixo("9999").getPessoa();
-	Pessoa irmao2 = new PessoaDataBuilder().nomeCompleto("Pessoa2").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("555.555.555-55").pai(avoMasculino).mae(mae).municipioNascimento("Municipio").ufNascimento("SP").dddTelefoneCelular("99").prefixoTelefoneCelular("9999").sufixoTelefoneCelular("9999").dddTelefoneFixo("99").prefixoTelefoneFixo("9999").sufixoTelefoneFixo("9999").getPessoa();
+	Pessoa irmao1 = new PessoaDataBuilder().nomeCompleto("Pessoa1").sexo(GeneroEnum.FEMININO).dataNascimento(new Date()).cpf("444.444.444-44").pai(avoMasculino).mae(avoFeminino).municipioNascimento("Municipio").ufNascimento("SP").telefoneCelular("99-99999-9999").telefoneFixo("99-9999-9999").getPessoa();
+	Pessoa irmao2 = new PessoaDataBuilder().nomeCompleto("Pessoa2").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("555.555.555-55").pai(avoMasculino).mae(mae).municipioNascimento("Municipio").ufNascimento("SP").telefoneCelular("99-99999-9999").telefoneFixo("99-9999-9999").getPessoa();
 
 	Boolean permitiuAInclusaoDePaisIrmaosDaPessoa = false;
 
@@ -143,8 +143,8 @@ public class PessoaServiceTest extends TransactionalTestCase {
 	pessoaService.inserir(pai);
 	pessoaService.inserir(mae);
 
-	Pessoa irmao1 = new PessoaDataBuilder().nomeCompleto("Pessoa1").sexo(GeneroEnum.FEMININO).dataNascimento(new Date()).cpf("444.444.444-44").pai(avoMasculino).mae(avoFeminino).municipioNascimento("Municipio").ufNascimento("SP").dddTelefoneCelular("99").prefixoTelefoneCelular("9999").sufixoTelefoneCelular("9999").dddTelefoneFixo("99").prefixoTelefoneFixo("9999").sufixoTelefoneFixo("9999").getPessoa();
-	Pessoa irmao2 = new PessoaDataBuilder().nomeCompleto("Pessoa2").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("555.555.555-55").pai(pai).mae(avoFeminino).municipioNascimento("Municipio").ufNascimento("SP").dddTelefoneCelular("99").prefixoTelefoneCelular("9999").sufixoTelefoneCelular("9999").dddTelefoneFixo("99").prefixoTelefoneFixo("9999").sufixoTelefoneFixo("9999").getPessoa();
+	Pessoa irmao1 = new PessoaDataBuilder().nomeCompleto("Pessoa1").sexo(GeneroEnum.FEMININO).dataNascimento(new Date()).cpf("444.444.444-44").pai(avoMasculino).mae(avoFeminino).municipioNascimento("Municipio").ufNascimento("SP").telefoneCelular("99-99999-9999").telefoneFixo("99-9999-9999").getPessoa();
+	Pessoa irmao2 = new PessoaDataBuilder().nomeCompleto("Pessoa2").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("555.555.555-55").pai(pai).mae(avoFeminino).municipioNascimento("Municipio").ufNascimento("SP").telefoneCelular("99-99999-9999").telefoneFixo("99-9999-9999").getPessoa();
 
 	Boolean permitiuAInclusaoDePaisIrmaosDaPessoa = false;
 
@@ -172,8 +172,8 @@ public class PessoaServiceTest extends TransactionalTestCase {
 	pessoaService.inserir(pai);
 	pessoaService.inserir(mae);
 
-	Pessoa irmao1 = new PessoaDataBuilder().nomeCompleto("Pessoa1").sexo(GeneroEnum.FEMININO).dataNascimento(new Date()).cpf("444.444.444-44").pai(avoMasculino).mae(avoFeminino).municipioNascimento("Municipio").ufNascimento("SP").dddTelefoneCelular("99").prefixoTelefoneCelular("9999").sufixoTelefoneCelular("9999").dddTelefoneFixo("99").prefixoTelefoneFixo("9999").sufixoTelefoneFixo("9999").getPessoa();
-	Pessoa irmao2 = new PessoaDataBuilder().nomeCompleto("Pessoa2").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("555.555.555-55").pai(pai).mae(avoFeminino).municipioNascimento("Municipio").ufNascimento("SP").dddTelefoneCelular("99").prefixoTelefoneCelular("9999").sufixoTelefoneCelular("9999").dddTelefoneFixo("99").prefixoTelefoneFixo("9999").sufixoTelefoneFixo("9999").getPessoa();
+	Pessoa irmao1 = new PessoaDataBuilder().nomeCompleto("Pessoa1").sexo(GeneroEnum.FEMININO).dataNascimento(new Date()).cpf("444.444.444-44").pai(avoMasculino).mae(avoFeminino).municipioNascimento("Municipio").ufNascimento("SP").telefoneCelular("99-99999-9999").telefoneFixo("99-9999-9999").getPessoa();
+	Pessoa irmao2 = new PessoaDataBuilder().nomeCompleto("Pessoa2").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("555.555.555-55").pai(pai).mae(avoFeminino).municipioNascimento("Municipio").ufNascimento("SP").telefoneCelular("99-99999-9999").telefoneFixo("99-9999-9999").getPessoa();
 
 	Boolean permitiuAInclusaoDePaisIrmaosDaPessoa = false;
 
@@ -252,7 +252,7 @@ public class PessoaServiceTest extends TransactionalTestCase {
     @Test
     public void deveExcluirAPessoaEOsFilhosDelaRecursivamente() {
 
-	Pessoa neto = new PessoaDataBuilder().nomeCompleto("Pessoa1").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("999.999.999-99").pai(null).mae(null).municipioNascimento("Municipio").ufNascimento("SP").dddTelefoneCelular("99").prefixoTelefoneCelular("9999").sufixoTelefoneCelular("9999").dddTelefoneFixo("99").prefixoTelefoneFixo("9999").sufixoTelefoneFixo("9999").getPessoa();
+	Pessoa neto = new PessoaDataBuilder().nomeCompleto("Pessoa1").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("999.999.999-99").pai(null).mae(null).municipioNascimento("Municipio").ufNascimento("SP").telefoneCelular("99-99999-9999").telefoneFixo("99-9999-9999").getPessoa();
 	neto.setPai(pai);
 
 	pessoaService.inserir(avoMasculino);
@@ -294,7 +294,7 @@ public class PessoaServiceTest extends TransactionalTestCase {
 
 	for (int numeroDePessoas = 0; numeroDePessoas < 25; numeroDePessoas++) {
 	    calendarDataNascimento.set(Calendar.YEAR, anoDoPrimeiroNascimento + numeroDePessoas);
-	    Pessoa pessoa = new PessoaDataBuilder().nomeCompleto("Pessoa" + numeroDePessoas).sexo(GeneroEnum.MASCULINO).dataNascimento(calendarDataNascimento.getTime()).cpf("" + numeroDePessoas).pai(avoMasculino).mae(avoFeminino).municipioNascimento("Municipio").ufNascimento("SP").dddTelefoneCelular("99").prefixoTelefoneCelular("9999").sufixoTelefoneCelular("9999").dddTelefoneFixo("99").prefixoTelefoneFixo("9999").sufixoTelefoneFixo("9999").getPessoa();
+	    Pessoa pessoa = new PessoaDataBuilder().nomeCompleto("Pessoa" + numeroDePessoas).sexo(GeneroEnum.MASCULINO).dataNascimento(calendarDataNascimento.getTime()).cpf("" + numeroDePessoas).pai(avoMasculino).mae(avoFeminino).municipioNascimento("Municipio").ufNascimento("SP").telefoneCelular("99-99999-9999").telefoneFixo("99-9999-9999").getPessoa();
 	    pessoaService.inserir(pessoa);
 	}
 
@@ -303,7 +303,20 @@ public class PessoaServiceTest extends TransactionalTestCase {
     @Test
     public void deveContarPessoasCorretamenteSemFiltroPreenchido() {
 	gerarMassaDadosTestesListagem();
-	Assert.assertEquals("Nao contou os registros corretamente", new Long(27L), pessoaService.contaTotalPessoas(new FiltroListagemPessoasDTO()));
+	FiltroListagemPessoasDTO filtroListagemPessoasDTO = new FiltroListagemPessoasDTO();
+
+	filtroListagemPessoasDTO.setCpf("");
+	filtroListagemPessoasDTO.setNomeMaeOuPai("");
+	filtroListagemPessoasDTO.setNomePessoa("");
+
+	Assert.assertEquals("Nao contou os registros corretamente", new Long(27L), pessoaService.contaTotalPessoas(filtroListagemPessoasDTO));
+
+	filtroListagemPessoasDTO.setCpf(null);
+	filtroListagemPessoasDTO.setNomeMaeOuPai(null);
+	filtroListagemPessoasDTO.setNomePessoa(null);
+
+	Assert.assertEquals("Nao contou os registros corretamente", new Long(27L), pessoaService.contaTotalPessoas(filtroListagemPessoasDTO));
+
     }
 
     @Test
@@ -312,12 +325,20 @@ public class PessoaServiceTest extends TransactionalTestCase {
 	gerarMassaDadosTestesListagem();
 	FiltroListagemPessoasDTO filtroListagemPessoasDTO = new FiltroListagemPessoasDTO();
 
+	filtroListagemPessoasDTO.setCpf("");
+	filtroListagemPessoasDTO.setNomeMaeOuPai("");
+	filtroListagemPessoasDTO.setNomePessoa("");
+
 	filtroListagemPessoasDTO.setIndexDoPrimeiraRegistroDaPagina(0);
 	filtroListagemPessoasDTO.setQuantidadeDeRegistrosPorPagina(quantidadeDeRegistrosPorPagina);
 	List<Pessoa> primeiraPagina = pessoaService.listarPessoas(filtroListagemPessoasDTO);
 	Assert.assertEquals("O tamanho da primeira pagina nao esta correto", new Long(quantidadeDeRegistrosPorPagina), new Long(primeiraPagina.size()));
 	Assert.assertEquals("O primeiro registro da primeira pagina nao foi o esperado", "Avo Masculino", primeiraPagina.get(0).getNomeCompleto());
 	Assert.assertEquals("O ultimo registro da primeira pagina nao foi o esperado", "Pessoa7", primeiraPagina.get(9).getNomeCompleto());
+
+	filtroListagemPessoasDTO.setCpf(null);
+	filtroListagemPessoasDTO.setNomeMaeOuPai(null);
+	filtroListagemPessoasDTO.setNomePessoa(null);
 
 	filtroListagemPessoasDTO.setIndexDoPrimeiraRegistroDaPagina(quantidadeDeRegistrosPorPagina);
 	List<Pessoa> segundaPagina = pessoaService.listarPessoas(filtroListagemPessoasDTO);
@@ -371,9 +392,9 @@ public class PessoaServiceTest extends TransactionalTestCase {
     public void deveContarEListarPessoasCorretamenteQuandoONomeDosPaisEInformado() {
 
 	gerarMassaDadosTestesListagem();
-	Pessoa paiComONomeDiferente = new PessoaDataBuilder().nomeCompleto("paiComONomeDiferente").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("888.888.888-88").pai(avoMasculino).mae(avoFeminino).municipioNascimento("Municipio").ufNascimento("SP").dddTelefoneCelular("99").prefixoTelefoneCelular("9999").sufixoTelefoneCelular("9999").dddTelefoneFixo("99").prefixoTelefoneFixo("9999").sufixoTelefoneFixo("9999").getPessoa();
-	Pessoa maeComONomeDiferente = new PessoaDataBuilder().nomeCompleto("maeComONomeDiferente").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("555.555.555-55").pai(avoMasculino).mae(avoFeminino).municipioNascimento("Municipio").ufNascimento("SP").dddTelefoneCelular("99").prefixoTelefoneCelular("9999").sufixoTelefoneCelular("9999").dddTelefoneFixo("99").prefixoTelefoneFixo("9999").sufixoTelefoneFixo("9999").getPessoa();
-	Pessoa pessoaComPaisDiferentes = new PessoaDataBuilder().nomeCompleto("voMasculinoComONomeDiferente").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("666.666.666-66").pai(paiComONomeDiferente).mae(maeComONomeDiferente).municipioNascimento("Municipio").ufNascimento("SP").dddTelefoneCelular("99").prefixoTelefoneCelular("9999").sufixoTelefoneCelular("9999").dddTelefoneFixo("99").prefixoTelefoneFixo("9999").sufixoTelefoneFixo("9999").getPessoa();
+	Pessoa paiComONomeDiferente = new PessoaDataBuilder().nomeCompleto("paiComONomeDiferente").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("888.888.888-88").pai(avoMasculino).mae(avoFeminino).municipioNascimento("Municipio").ufNascimento("SP").telefoneCelular("99-99999-9999").telefoneFixo("99-9999-9999").getPessoa();
+	Pessoa maeComONomeDiferente = new PessoaDataBuilder().nomeCompleto("maeComONomeDiferente").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("555.555.555-55").pai(avoMasculino).mae(avoFeminino).municipioNascimento("Municipio").ufNascimento("SP").telefoneCelular("99-99999-9999").telefoneFixo("99-9999-9999").getPessoa();
+	Pessoa pessoaComPaisDiferentes = new PessoaDataBuilder().nomeCompleto("voMasculinoComONomeDiferente").sexo(GeneroEnum.MASCULINO).dataNascimento(new Date()).cpf("666.666.666-66").pai(paiComONomeDiferente).mae(maeComONomeDiferente).municipioNascimento("Municipio").ufNascimento("SP").telefoneCelular("99-99999-9999").telefoneFixo("99-9999-9999").getPessoa();
 
 	pessoaService.inserir(paiComONomeDiferente);
 	pessoaService.inserir(maeComONomeDiferente);
@@ -389,7 +410,6 @@ public class PessoaServiceTest extends TransactionalTestCase {
 	Long numeroTotalDeRegistros = pessoaService.contaTotalPessoas(filtroListagemPessoasDTO);
 	Assert.assertEquals("Nao contou o total de registros corretamente quando o nome do pai foi informado", new Long(1), new Long(numeroTotalDeRegistros));
 
-	
 	filtroListagemPessoasDTO.setNomeMaeOuPai("maeComONomeDiferente");
 	filtroListagemPessoasDTO.setIndexDoPrimeiraRegistroDaPagina(0);
 	filtroListagemPessoasDTO.setQuantidadeDeRegistrosPorPagina(quantidadeDeRegistrosPorPagina);
@@ -405,13 +425,37 @@ public class PessoaServiceTest extends TransactionalTestCase {
 	gerarMassaDadosTestesListagem();
 	Integer quantidadeDeRegistrosPorPagina = 10;
 	FiltroListagemPessoasDTO filtroListagemPessoasDTO = new FiltroListagemPessoasDTO();
-	filtroListagemPessoasDTO.setNomePessoa("Pessoa24");;
+	filtroListagemPessoasDTO.setNomePessoa("Pessoa24");
+	;
 	filtroListagemPessoasDTO.setIndexDoPrimeiraRegistroDaPagina(0);
 	filtroListagemPessoasDTO.setQuantidadeDeRegistrosPorPagina(quantidadeDeRegistrosPorPagina);
 	List<Pessoa> unicaPagina = pessoaService.listarPessoas(filtroListagemPessoasDTO);
 	Assert.assertEquals("Nao retornou uma pagina com o numero correto de pessoas quando o nome  foi informado", new Long(1), new Long(unicaPagina.size()));
 	Long numeroTotalDeRegistros = pessoaService.contaTotalPessoas(filtroListagemPessoasDTO);
 	Assert.assertEquals("Nao contou o total de registros corretamente quando o nome  foi informado", new Long(1), new Long(numeroTotalDeRegistros));
+    }
+
+    @Test
+    public void devePesquisarPessoasPorNome() {
+	gerarMassaDadosTestesListagem();
+	List<Pessoa> listPessoas = pessoaService.listarPorNome("Pessoa1", null);
+	Assert.assertEquals("Nao pesquisou as pessoas corretamente", 11, listPessoas.size());
+    }
+
+    @Test
+    public void devePesquisarPessoasPorNomeIgnorandoUmPessoaExpecifica() {
+	gerarMassaDadosTestesListagem();
+	List<Pessoa> listPessoas = pessoaService.listarPorNome("Pessoa1", null);
+	Pessoa pessoaASerIgnorada = listPessoas.get(5);
+	listPessoas = pessoaService.listarPorNome("Pessoa1", null, pessoaASerIgnorada);
+	Assert.assertEquals("Nao ignoraou a pessoa corretamente", 10, listPessoas.size());
+    }
+
+    @Test
+    public void devePesquisarPessoasLimitandoONumeroMaximoDeRegistros() {
+	gerarMassaDadosTestesListagem();
+	List<Pessoa> listPessoas = pessoaService.listarPorNome("Pessoa1", 3);
+	Assert.assertEquals("Nao limitou a quantidade maxima de registros", 3, listPessoas.size());
     }
 
 }

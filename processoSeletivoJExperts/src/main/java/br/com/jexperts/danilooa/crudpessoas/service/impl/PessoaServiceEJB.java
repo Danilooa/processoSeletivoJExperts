@@ -15,9 +15,6 @@ import br.com.jexperts.danilooa.crudpessoas.exception.NegocioException.Identific
 import br.com.jexperts.danilooa.crudpessoas.jpa.IdentificadorQueries;
 import br.com.jexperts.danilooa.crudpessoas.service.PessoaService;
 
-import com.google.common.base.Predicates;
-import com.google.common.collect.FluentIterable;
-
 @Stateless
 public class PessoaServiceEJB implements PessoaService {
 
@@ -26,21 +23,77 @@ public class PessoaServiceEJB implements PessoaService {
 
     @Override
     public void inserir(Pessoa pessoa) throws NegocioException {
-	if (contarPessoasComMesmoCpf(pessoa.getCpf()) > 0) {
+	if (pessoa.getPai() != null) {
+	    pessoa.setPai(this.getPessoa(pessoa.getPai().getId()));
+	}
+	if (pessoa.getMae() != null) {
+	    pessoa.setMae(this.getPessoa(pessoa.getMae().getId()));
+	}
+	if (contarPessoasComMesmoCpf(pessoa.getId(), pessoa.getCpf()) > 0) {
 	    throw new NegocioException(IdentificadorNegocioExceptions.PESSOAS_COM_CPFS_IGUAIS);
 	}
 	if (mesmaPaternidade(pessoa.getPai(), pessoa.getMae())) {
 	    throw new NegocioException(IdentificadorNegocioExceptions.PAIS_SAO_IRMAOS);
 	}
 
-	entityManager.persist(pessoa);
+	if (paiEMaeIguais(pessoa)) {
+	    throw new NegocioException(IdentificadorNegocioExceptions.PAI_E_MAE_IGUAIS);
+	}
+
+	if (paiOuMaeSaoIguaisFilho(pessoa)) {
+	    throw new NegocioException(IdentificadorNegocioExceptions.PAI_OU_MAE_SAO_IGUAIS_FILHO);
+	}
+
+	if (pessoa.getId() == null) {
+	    entityManager.persist(pessoa);
+	} else {
+	    entityManager.merge(pessoa);
+	}
 	entityManager.flush();
+    }
+
+    private Boolean paiEMaeIguais(Pessoa pessoa) {
+	if (pessoa.getPai() == null || pessoa.getMae() == null) {
+	    return false;
+	}
+	return pessoa.getPai().equals(pessoa.getMae());
+    }
+
+    private Boolean paiOuMaeSaoIguaisFilho(Pessoa pessoa) {
+	if (pessoa.getPai() == null && pessoa.getMae() == null) {
+	    return false;
+	}
+
+	if (pessoa.equals(pessoa.getPai())) {
+	    return true;
+	}
+
+	if (pessoa.equals(pessoa.getMae())) {
+	    return true;
+	}
+
+	return false;
     }
 
     private Boolean mesmaPaternidade(Pessoa pai, Pessoa mae) {
 
 	// Pai nao pode ser igual o pai do Mae
 	if (pai != null && mae != null && pai.equals(mae.getPai())) {
+	    return true;
+	}
+
+	// Pai nao pode ser igual o pai do Mae
+	if (pai != null && mae != null && pai.equals(mae.getMae())) {
+	    return true;
+	}
+
+	// Pai nao pode ser igual o pai do Pai
+	if (pai != null && pai.equals(pai.getPai())) {
+	    return true;
+	}
+
+	// Mae nao pode ser igual a mae da Mae
+	if (mae != null && mae.equals(mae.getMae())) {
 	    return true;
 	}
 
@@ -57,9 +110,21 @@ public class PessoaServiceEJB implements PessoaService {
 	return false;
     }
 
-    private Long contarPessoasComMesmoCpf(String cpf) {
-	Query query = entityManager.createNamedQuery(IdentificadorQueries.CONTA_PESSOAS_MESMO_CPF.name());
-	query.setParameter("cpf", cpf);
+    private Long contarPessoasComMesmoCpf(Long idPessoa, String cpf) {
+
+	Query query = null;
+
+	if (idPessoa == null) {
+	    query = entityManager.createNamedQuery(IdentificadorQueries.CONTA_PESSOAS_MESMO_CPF.name());
+	    query.setParameter("cpf", cpf);
+	}
+
+	if (idPessoa != null) {
+	    query = entityManager.createNamedQuery(IdentificadorQueries.CONTA_PESSOAS_MESMO_CPF_QUANDO_PESSOA_POSSUI_ID.name());
+	    query.setParameter("idPessoa", idPessoa);
+	    query.setParameter("cpf", cpf);
+	}
+
 	return (Long) query.getSingleResult();
     }
 
@@ -88,8 +153,27 @@ public class PessoaServiceEJB implements PessoaService {
 	for (Pessoa filho : listFilhosPessoa) {
 	    excluir(filho);
 	}
-
+	pessoa = entityManager.find(Pessoa.class, pessoa.getId());
 	entityManager.remove(pessoa);
+    }
+
+    @Override
+    public List<Pessoa> listarPorNome(String nome, Integer quantidadeMaximaDeRegistros, Pessoa... pessoaASerIgnorada) {
+	Query queryListaPessoasPorNome = entityManager.createNamedQuery(IdentificadorQueries.LISTA_PESSOAS_POR_NOME.name());
+	queryListaPessoasPorNome.setParameter("nomeCompleto", "%" + nome.toUpperCase() + "%");
+	if (quantidadeMaximaDeRegistros != null) {
+	    queryListaPessoasPorNome.setMaxResults(quantidadeMaximaDeRegistros);
+	}
+
+	List<Pessoa> listFilhosPessoa = queryListaPessoasPorNome.getResultList();
+
+	for (Pessoa pessoaASerRemovida : pessoaASerIgnorada) {
+	    if (pessoaASerRemovida == null || pessoaASerRemovida.getId() == null) {
+		continue;
+	    }
+	    listFilhosPessoa.remove(pessoaASerRemovida);
+	}
+	return listFilhosPessoa;
     }
 
     @Override
@@ -100,14 +184,14 @@ public class PessoaServiceEJB implements PessoaService {
     }
 
     private void definirParametrosQuery(FiltroListagemPessoasDTO filtroListagemPessoasDTO, Query query) {
-	if (filtroListagemPessoasDTO.getNomePessoa() != null && !filtroListagemPessoasDTO.getNomePessoa().isEmpty()) {
-	    query.setParameter("nomePessoa", "%" + filtroListagemPessoasDTO.getNomePessoa() + "%");
+	if (filtroListagemPessoasDTO.getNomePessoa() != null && !filtroListagemPessoasDTO.getNomePessoa().trim().isEmpty()) {
+	    query.setParameter("nomePessoa", "%" + filtroListagemPessoasDTO.getNomePessoa().toUpperCase() + "%");
 	}
-	if (filtroListagemPessoasDTO.getCpf() != null && !filtroListagemPessoasDTO.getCpf().isEmpty()) {
+	if (filtroListagemPessoasDTO.getCpf() != null && !filtroListagemPessoasDTO.getCpf().trim().isEmpty()) {
 	    query.setParameter("cpf", filtroListagemPessoasDTO.getCpf());
 	}
-	if (filtroListagemPessoasDTO.getNomeMaeOuPai() != null && !filtroListagemPessoasDTO.getNomeMaeOuPai().isEmpty()) {
-	    query.setParameter("nomeMaeOuPai", filtroListagemPessoasDTO.getNomeMaeOuPai());
+	if (filtroListagemPessoasDTO.getNomeMaeOuPai() != null && !filtroListagemPessoasDTO.getNomeMaeOuPai().trim().isEmpty()) {
+	    query.setParameter("nomeMaeOuPai", "%" + filtroListagemPessoasDTO.getNomeMaeOuPai().toUpperCase() + "%");
 	}
 	if (filtroListagemPessoasDTO.getDataInicialAniversario() != null) {
 	    query.setParameter("dataInicialAniversario", filtroListagemPessoasDTO.getDataInicialAniversario());
@@ -146,20 +230,39 @@ public class PessoaServiceEJB implements PessoaService {
 	stringBuilderQueryListagemPessoas.append(instrucaoParaListarOuContar);
 	stringBuilderQueryListagemPessoas.append("from  ");
 	stringBuilderQueryListagemPessoas.append("		Pessoa p ");
+
+	if (deveContar) {
+	    stringBuilderQueryListagemPessoas.append("		left join p.pai  pai ");
+	    stringBuilderQueryListagemPessoas.append("		left join p.mae mae ");
+	} else {
+	    stringBuilderQueryListagemPessoas.append("		left join fetch p.pai pai ");
+	    stringBuilderQueryListagemPessoas.append("		left join fetch p.mae mae ");
+	}
 	List<Object> listArgumentosPreenchidos = new ArrayList<>();
 	listArgumentosPreenchidos.add(filtroListagemPessoasDTO.getCpf());
 	listArgumentosPreenchidos.add(filtroListagemPessoasDTO.getDataFinalAniversario());
 	listArgumentosPreenchidos.add(filtroListagemPessoasDTO.getDataInicialAniversario());
 	listArgumentosPreenchidos.add(filtroListagemPessoasDTO.getNomeMaeOuPai());
 	listArgumentosPreenchidos.add(filtroListagemPessoasDTO.getNomePessoa());
-	FluentIterable<Object> fluentIterableArgumentosPreenchiso = FluentIterable.from(listArgumentosPreenchidos);
-	Boolean todosOsArgumentosSaoNulos = fluentIterableArgumentosPreenchiso.allMatch(Predicates.isNull());
-	if (todosOsArgumentosSaoNulos) {
+
+	boolean todosArgumentosNulos = true;
+	for (Object argumento : listArgumentosPreenchidos) {
+	    if (argumento != null && !argumento.toString().trim().isEmpty()) {
+		todosArgumentosNulos = false;
+		break;
+	    }
+	}
+
+	if (todosArgumentosNulos) {
+	    if (!deveContar) {
+		stringBuilderQueryListagemPessoas.append(" order by  ");
+		stringBuilderQueryListagemPessoas.append(" p.nomeCompleto  ");
+	    }
 	    return stringBuilderQueryListagemPessoas.toString();
 	}
-	stringBuilderQueryListagemPessoas.append("Where ");
+	stringBuilderQueryListagemPessoas.append(" Where ");
 	if (filtroListagemPessoasDTO.getNomePessoa() != null && !filtroListagemPessoasDTO.getNomePessoa().isEmpty()) {
-	    stringBuilderQueryListagemPessoas.append("		p.nomeCompleto like :nomePessoa ");
+	    stringBuilderQueryListagemPessoas.append("		upper(p.nomeCompleto) like :nomePessoa ");
 	    stringBuilderQueryListagemPessoas.append("and");
 	}
 	if (filtroListagemPessoasDTO.getCpf() != null && !filtroListagemPessoasDTO.getCpf().isEmpty()) {
@@ -168,9 +271,9 @@ public class PessoaServiceEJB implements PessoaService {
 	}
 	if (filtroListagemPessoasDTO.getNomeMaeOuPai() != null && !filtroListagemPessoasDTO.getNomeMaeOuPai().isEmpty()) {
 	    stringBuilderQueryListagemPessoas.append(" ( ");
-	    stringBuilderQueryListagemPessoas.append("	p.pai.nomeCompleto like :nomeMaeOuPai ");
+	    stringBuilderQueryListagemPessoas.append("	upper(pai.nomeCompleto) like :nomeMaeOuPai ");
 	    stringBuilderQueryListagemPessoas.append("	or ");
-	    stringBuilderQueryListagemPessoas.append("	p.mae.nomeCompleto like :nomeMaeOuPai ");
+	    stringBuilderQueryListagemPessoas.append("	upper(mae.nomeCompleto) like :nomeMaeOuPai ");
 	    stringBuilderQueryListagemPessoas.append(" ) ");
 	    stringBuilderQueryListagemPessoas.append("and ");
 	}
@@ -189,6 +292,14 @@ public class PessoaServiceEJB implements PessoaService {
 	    stringBuilderQueryListagemPessoas.append(" order by  ");
 	    stringBuilderQueryListagemPessoas.append(" p.nomeCompleto  ");
 	}
-return stringBuilderQueryListagemPessoas.toString();
+	return stringBuilderQueryListagemPessoas.toString();
     }
+
+    @Override
+    public Pessoa getPessoa(Long idPessoa) {
+	Query queryListaPessoasPorNome = entityManager.createNamedQuery(IdentificadorQueries.OBTEM_PESSOA_POR_ID_COM_MAE_E_PAI.name());
+	queryListaPessoasPorNome.setParameter("idPessoa", idPessoa);
+	return (Pessoa) queryListaPessoasPorNome.getSingleResult();
+    }
+
 }

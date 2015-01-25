@@ -14,5 +14,7 @@ public interface PessoaService {
     void excluir(Pessoa pessoa);
     List<Pessoa> listarPessoas(FiltroListagemPessoasDTO filtroListagemPessoasDTO);
     Long contaTotalPessoas(FiltroListagemPessoasDTO filtroListagemPessoasDTO);
+    Pessoa getPessoa(Long idPessoa);
+    List<Pessoa> listarPorNome(String nome, Integer quantidadeMaximaDeRegistros, Pessoa... pessoaASerIgnorada);
 
 }

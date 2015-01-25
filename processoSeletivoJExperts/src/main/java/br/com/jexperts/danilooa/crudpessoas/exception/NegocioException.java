@@ -6,7 +6,9 @@ public class NegocioException extends RuntimeException {
 
     public static enum IdentificadorNegocioExceptions {
 	PESSOAS_COM_CPFS_IGUAIS,
-	PAIS_SAO_IRMAOS;
+	PAIS_SAO_IRMAOS, 
+	PAI_E_MAE_IGUAIS, 
+	PAI_OU_MAE_SAO_IGUAIS_FILHO;
     }
 
     private IdentificadorNegocioExceptions identificadorNegocioExceptions;

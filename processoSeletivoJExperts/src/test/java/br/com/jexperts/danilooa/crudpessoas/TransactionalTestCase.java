@@ -32,7 +32,7 @@ public abstract class TransactionalTestCase {
     }
 
     public static JavaArchive createDeployment() {
-	return ShrinkWrap.create(JavaArchive.class);
+	return ShrinkWrap.create(JavaArchive.class).addClass(TransactionalTestCase.class);
     }
 
 }
