@@ -37,13 +37,9 @@ public class Pessoa {
     private String municipioNascimento;
     private String ufNascimento;
 
-    private String dddTelefoneCelular;
-    private String prefixoTelefoneCelular;
-    private String sufixoTelefoneCelular;
+    private String telefoneCelular;
 
-    private String dddTelefoneFixo;
-    private String prefixoTelefoneFixo;
-    private String sufixoTelefoneFixo;
+    private String telefoneFixo;
 
     public String getNomeCompleto() {
 	return nomeCompleto;
@@ -116,85 +112,25 @@ public class Pessoa {
     public void setUfNascimento(String ufNascimento) {
 	this.ufNascimento = ufNascimento;
     }
-
-    public String getDddTelefoneCelular() {
-	return dddTelefoneCelular;
-    }
-
-    public void setDddTelefoneCelular(String dddTelefoneCelular) {
-	this.dddTelefoneCelular = dddTelefoneCelular;
-    }
-
-    public String getPrefixoTelefoneCelular() {
-	return prefixoTelefoneCelular;
-    }
-
-    public void setPrefixoTelefoneCelular(String prefixoTelefoneCelular) {
-	this.prefixoTelefoneCelular = prefixoTelefoneCelular;
-    }
-
-    public String getSufixoTelefoneCelular() {
-	return sufixoTelefoneCelular;
-    }
-
-    public void setSufixoTelefoneCelular(String sufixoTelefoneCelular) {
-	this.sufixoTelefoneCelular = sufixoTelefoneCelular;
-    }
-
-    public String getDddTelefoneFixo() {
-	return dddTelefoneFixo;
-    }
-
-    public void setDddTelefoneFixo(String dddTelefoneFixo) {
-	this.dddTelefoneFixo = dddTelefoneFixo;
-    }
-
-    public String getPrefixoTelefoneFixo() {
-	return prefixoTelefoneFixo;
-    }
-
-    public void setPrefixoTelefoneFixo(String prefixoTelefoneFixo) {
-	this.prefixoTelefoneFixo = prefixoTelefoneFixo;
-    }
-
-    public String getSufixoTelefoneFixo() {
-	return sufixoTelefoneFixo;
-    }
-
-    public void setSufixoTelefoneFixo(String sufixoTelefoneFixo) {
-	this.sufixoTelefoneFixo = sufixoTelefoneFixo;
-    }
-
-    @Override
-    public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((id == null) ? 0 : id.hashCode());
-	return result;
-    }
-
-    public String telefoneCelularFormatado(){
-	StringBuilder telefoneCelularFormato = new StringBuilder();
-	if(dddTelefoneCelular == null || dddTelefoneCelular.isEmpty()){
-	    return "";
-	}
-	if(prefixoTelefoneCelular == null || prefixoTelefoneCelular.isEmpty()){
-	    return "";
-	}
-	if(sufixoTelefoneCelular == null || sufixoTelefoneCelular.isEmpty()){
-	    return "";
-	}
-	telefoneCelularFormato.append(dddTelefoneCelular);
-	telefoneCelularFormato.append("-");
-	telefoneCelularFormato.append(prefixoTelefoneCelular);
-	telefoneCelularFormato.append("-");
-	telefoneCelularFormato.append(sufixoTelefoneCelular);
-	return telefoneCelularFormato.toString();
-    }
-    
     
     public byte[] getImagem() {
         return imagem;
+    }
+
+    public String getTelefoneCelular() {
+        return telefoneCelular;
+    }
+
+    public void setTelefoneCelular(String telefoneCelular) {
+        this.telefoneCelular = telefoneCelular;
+    }
+
+    public String getTelefoneFixo() {
+        return telefoneFixo;
+    }
+
+    public void setTelefoneFixo(String telefoneFixo) {
+        this.telefoneFixo = telefoneFixo;
     }
 
     public void setImagem(byte[] imagem) {

@@ -36,8 +36,12 @@ public class ProcessadorImagemServlet extends HttpServlet {
 
 	String stringIdPessoa = request.getParameter("idPessoa");
 
+	Pessoa pessoa = null;
 	if (!stringIdPessoa.trim().isEmpty()) {
-	    Pessoa pessoa = entityManager.find(Pessoa.class, Long.valueOf(stringIdPessoa));
+	    pessoa = entityManager.find(Pessoa.class, Long.valueOf(stringIdPessoa));
+	}
+
+	if (pessoa != null && pessoa.getImagem() != null) {
 	    imagem = pessoa.getImagem();
 	    escreverImagemNaOutput(response, imagem);
 	    return;

@@ -69,7 +69,8 @@ public class CadastroPessoaController implements Serializable {
     public void tratarUploadImagem(FileUploadEvent event) {
 	byte[] imagem = new byte[(int) event.getFile().getSize()];
 	pessoa.setImagem(imagem);
-	DataInputStream dataInputStream = null;;
+	DataInputStream dataInputStream = null;
+	;
 	try {
 	    dataInputStream = new DataInputStream(event.getFile().getInputstream());
 	    dataInputStream.readFully(imagem);
@@ -79,7 +80,6 @@ public class CadastroPessoaController implements Serializable {
 	FacesContext facesContext = FacesContext.getCurrentInstance();
 	HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
 	session.setAttribute("imagem", imagem);
-	JavaServerFacesUtils.adicionarMensagemInformacao(Mensagens.IMAGEM_ATUALIZADA_COM_SUCESSO.name());
     }
 
     public Long getIdPessoa() {

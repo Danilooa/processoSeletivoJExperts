@@ -62,33 +62,13 @@ public class PessoaDataBuilder {
 	return this;
     }
 
-    public PessoaDataBuilder dddTelefoneCelular(String ufNascimento) {
-	this.pessoa.setUfNascimento(ufNascimento);
+    public PessoaDataBuilder telefoneCelular(String telefoneCelular) {
+	this.pessoa.setTelefoneCelular(telefoneCelular);
 	return this;
     }
 
-    public PessoaDataBuilder prefixoTelefoneCelular(String prefixoTelefoneCelular) {
-	this.pessoa.setPrefixoTelefoneCelular(prefixoTelefoneCelular);
-	return this;
-    }
-
-    public PessoaDataBuilder sufixoTelefoneCelular(String prefixoTelefoneCelular) {
-	this.pessoa.setPrefixoTelefoneCelular(prefixoTelefoneCelular);
-	return this;
-    }
-
-    public PessoaDataBuilder dddTelefoneFixo(String dddTelefoneFixo) {
-	this.pessoa.setDddTelefoneFixo(dddTelefoneFixo);
-	return this;
-    }
-
-    public PessoaDataBuilder prefixoTelefoneFixo(String prefixoTelefoneFixo) {
-	this.pessoa.setPrefixoTelefoneFixo(prefixoTelefoneFixo);
-	return this;
-    }
-
-    public PessoaDataBuilder sufixoTelefoneFixo(String sufixoTelefoneFixo) {
-	this.pessoa.setSufixoTelefoneFixo(sufixoTelefoneFixo);
+    public PessoaDataBuilder telefoneFixo(String telefoneFixo) {
+	this.pessoa.setTelefoneFixo(telefoneFixo);
 	return this;
     }
 

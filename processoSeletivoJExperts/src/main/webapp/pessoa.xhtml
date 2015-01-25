@@ -12,8 +12,8 @@
 		<p:panel header="#{cadastroPessoaController.tituloPagina} " style="margin-bottom:20px">
 			<h:panelGrid columns="3" cellpadding="10">
 				<p:outputLabel value="#{msgs.imagem}" />
-				<img id="imagem" src="ProcessadorImagemServlet?idPessoa=#{cadastroPessoaController.idPessoa}" style="margin-left: 100px;" />
-				<p:fileUpload fileUploadListener="#{cadastroPessoaController.tratarUploadImagem}" mode="advanced" update="messages" oncomplete="$('#imagem').attr('src', 'ProcessadorImagemServlet');" auto="true" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+				<img id="imagem" src="ProcessadorImagemServlet?idPessoa=#{cadastroPessoaController.idPessoa}" style="margin-left: 100px;" width="150px" height="100px"/>
+				<p:fileUpload fileUploadListener="#{cadastroPessoaController.tratarUploadImagem}" label="#{msgs.atualizarImagem}" invalidSizeMessage="#{msgs.arquivoExcedeTamanhoPermitido}" invalidFileMessage="#{msgs.arquivoInvalidadoSomentePngJpg}" mode="advanced" update="messages" oncomplete="$('#imagem').attr('src', '');$('#imagem').attr('src', 'ProcessadorImagemServlet?random='+Math.random());" auto="true" sizeLimit="5242880" allowTypes="/(\.|\/)(png|jpe?g)$/" />
 			</h:panelGrid>
 			<h:panelGrid id="panelGridCamposForm" columns="3" cellpadding="10">
 
@@ -22,13 +22,11 @@
 				<p:message for="inputTextNomePessoa" />
 
 				<p:outputLabel for="inputMaskCpf" value="#{msgs.cpf}" />
-				<p:inputMask id="inputMaskCpf" value="#{cadastroPessoaController.pessoa.cpf}" mask="999.999.999-99" required="true" requiredMessage="#{msgs.essaCampoDeveSerInformado}">
-					<p:ajax event="blur" process="inputMaskCpf" />
-				</p:inputMask>
+				<p:inputMask id="inputMaskCpf" value="#{cadastroPessoaController.pessoa.cpf}" mask="999.999.999-99" required="true" requiredMessage="#{msgs.essaCampoDeveSerInformado}"/>
 				<p:message for="inputMaskCpf" />
 
 				<p:outputLabel for="selectBoxGenero" value="#{msgs.genero}" required="true" />
-				<p:selectOneMenu id="selectBoxGenero" value="#{cadastroPessoaController.pessoa.genero}">
+				<p:selectOneMenu id="selectBoxGenero" value="#{cadastroPessoaController.pessoa.genero}" required="true" requiredMessage="#{msgs.esseCampoDeveSerSelecionado}">
 					<f:selectItem itemLabel="#{msgs.selecione}" />
 					<f:selectItems value="#{cadastroPessoaController.generos}" />
 				</p:selectOneMenu>
@@ -43,35 +41,23 @@
 				<p:message for="inputTextMunicipio" />
 
 				<p:outputLabel value="#{msgs.uf}" for="inputTextUf" />
-				<p:inputText id="inputTextUf" value="#{cadastroPessoaController.pessoa.ufNascimento}" maxlength="2" requiredMessage="#{msgs.essaCampoDeveSerInformado}" />
+				<p:inputText id="inputTextUf" value="#{cadastroPessoaController.pessoa.ufNascimento}" maxlength="2" requiredMessage="#{msgs.essaCampoDeveSerInformado}"  required="true" />
 				<p:message for="inputTextUf" />
 
-				<p:outputLabel for="inputTextDddCelular" value="#{msgs.telefoneCelular}" />
-				<h:panelGrid columns="5">
-					<p:inputText id="inputTextDddCelular" value="#{cadastroPessoaController.pessoa.dddTelefoneCelular}" maxlength="2" style="width: 20px" required="true" requiredMessage="${msgs.dddDeveSerInformado}" />
-					<h:outputText value="-" />
-					<p:inputText id="inputTextPrefixoTelefoneCelular" value="#{cadastroPessoaController.pessoa.prefixoTelefoneCelular}" maxlength="5" style="width: 50px" required="true" requiredMessage="${msgs.prefixoDeveSerInformado}" />
-					<h:outputText value="-" />
-					<p:inputText id="inputTextSufixoTelefoneCelular" value="#{cadastroPessoaController.pessoa.sufixoTelefoneCelular}" maxlength="4" style="width: 50px" required="true" requiredMessage="${msgs.sufixoDeveSerInformado}" />
+				<p:outputLabel for="inputTextCelular" value="#{msgs.telefoneCelular}" />
+				<h:panelGrid>
+					<p:inputMask  id="inputTextCelular" value="#{cadastroPessoaController.pessoa.telefoneCelular}" required="true" mask="99-99999-9999" requiredMessage="#{msgs.essaCampoDeveSerInformado}" />
 				</h:panelGrid>
-				<h:panelGrid columns="3">
-					<p:message for="inputTextDddCelular" />
-					<p:message for="inputTextPrefixoTelefoneCelular" />
-					<p:message for="inputTextSufixoTelefoneCelular" />
+				<h:panelGrid>
+					<p:message for="inputTextCelular" />
 				</h:panelGrid>
 
-				<p:outputLabel for="inputTextDddFixo" value="#{msgs.telefoneFixo}" />
-				<h:panelGrid columns="5">
-					<p:inputText id="inputTextDddFixo" value="#{cadastroPessoaController.pessoa.dddTelefoneFixo}" maxlength="2" style="width: 20px" />
-					<h:outputText value="-" />
-					<p:inputText id="inputTextPrefixoTelefoneFixo" value="#{cadastroPessoaController.pessoa.prefixoTelefoneFixo}" maxlength="4" style="width: 50px" />
-					<h:outputText value="-" />
-					<p:inputText id="inputTextSufixoTelefoneFixo" value="#{cadastroPessoaController.pessoa.sufixoTelefoneFixo}" maxlength="4" style="width: 50px" />
+				<p:outputLabel for="inputTextTelefoneFixo" value="#{msgs.telefoneFixo}" />
+				<h:panelGrid>
+					<p:inputMask  id="inputTextTelefoneFixo" value="#{cadastroPessoaController.pessoa.telefoneFixo}" mask="99-99999-9999"/>
 				</h:panelGrid>
-				<h:panelGrid columns="3">
-					<p:message for="inputTextDddFixo" />
-					<p:message for="inputTextPrefixoTelefoneFixo" />
-					<p:message for="inputTextSufixoTelefoneFixo" />
+				<h:panelGrid>
+					<p:message for="inputTextTelefoneFixo" />
 				</h:panelGrid>
 
 				<p:commandButton value="#{msgs.cadastrar}" process="panelGridCamposForm" update="panelGridCamposForm,messages" action="#{cadastroPessoaController.cadastrar}" ajax="true" />
