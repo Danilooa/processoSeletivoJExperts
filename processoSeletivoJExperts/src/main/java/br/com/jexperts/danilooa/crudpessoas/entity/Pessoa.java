@@ -23,6 +23,7 @@ public class Pessoa {
     private GeneroEnum genero;
     private Date dataNascimento;
     private String cpf;
+    private String email;
     @Lob
     private byte[] imagem;
 
@@ -135,6 +136,14 @@ public class Pessoa {
 
     public void setImagem(byte[] imagem) {
         this.imagem = imagem;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override

@@ -78,7 +78,7 @@ public class CadastroPessoaController implements Serializable {
 	    return new ArrayList<Pessoa>();
 	}
 
-	return pessoaService.listarPorNome(nomeASerBuscado, 5, pessoa, pessoa.getPai());
+	return pessoaService.listarPorNome(nomeASerBuscado, 5, pessoa);
     }
 
     public List<Pessoa> pesquisarPaiPorNome(String nomeASerBuscado) {
@@ -86,7 +86,7 @@ public class CadastroPessoaController implements Serializable {
 	    return new ArrayList<Pessoa>();
 	}
 
-	return pessoaService.listarPorNome(nomeASerBuscado, 5, pessoa, pessoa.getMae());
+	return pessoaService.listarPorNome(nomeASerBuscado, 5, pessoa);
     }
 
     public void tratarUploadImagem(FileUploadEvent event) {
@@ -130,4 +130,7 @@ public class CadastroPessoaController implements Serializable {
 	this.pessoa = pessoa;
     }
 
+    public boolean permitirQueCpfSejaEditado(){
+	return pessoa.getId() == null;
+    }
 }

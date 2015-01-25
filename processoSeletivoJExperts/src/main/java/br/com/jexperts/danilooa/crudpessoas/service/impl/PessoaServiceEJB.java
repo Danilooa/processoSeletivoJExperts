@@ -23,6 +23,12 @@ public class PessoaServiceEJB implements PessoaService {
 
     @Override
     public void inserir(Pessoa pessoa) throws NegocioException {
+	if(pessoa.getPai() != null){
+	    pessoa.setPai(this.getPessoa(pessoa.getPai().getId()));
+	}
+	if(pessoa.getMae() != null){
+	    pessoa.setMae(this.getPessoa(pessoa.getMae().getId()));
+	}
 	if (contarPessoasComMesmoCpf(pessoa.getId(), pessoa.getCpf()) > 0) {
 	    throw new NegocioException(IdentificadorNegocioExceptions.PESSOAS_COM_CPFS_IGUAIS);
 	}
@@ -73,6 +79,21 @@ public class PessoaServiceEJB implements PessoaService {
 
 	// Pai nao pode ser igual o pai do Mae
 	if (pai != null && mae != null && pai.equals(mae.getPai())) {
+	    return true;
+	}
+
+	// Pai nao pode ser igual o pai do Mae
+	if (pai != null && mae != null && pai.equals(mae.getMae())) {
+	    return true;
+	}
+
+	// Pai nao pode ser igual o pai do Pai
+	if (pai != null && pai.equals(pai.getPai())) {
+	    return true;
+	}
+
+	// Mae nao pode ser igual a mae da Mae
+	if (mae != null && mae.equals(mae.getMae())) {
 	    return true;
 	}
 

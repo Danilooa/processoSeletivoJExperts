@@ -10,6 +10,17 @@
 	<h:form>
 		<p:growl id="messages" for="exibirGrowl" />
 		<p:panel header="#{cadastroPessoaController.tituloPagina} " style="margin-bottom:20px">
+
+
+			<div class="ui-messages-warn ui-corner-all">
+				
+				<ul>
+					<li><span class="ui-messages-warn-icon"></span><span class="ui-messages-warn-summary">#{msgs.camposObrigatorios}</span></li>
+				</ul>
+			</div>
+			<br />
+			<br />
+
 			<h:panelGrid columns="3" cellpadding="10">
 				<p:outputLabel value="#{msgs.imagem}" />
 				<img id="imagem" src="ProcessadorImagemServlet?idPessoa=#{cadastroPessoaController.idPessoa}" style="margin-left: 100px;" width="150px" height="100px" />
@@ -17,12 +28,16 @@
 			</h:panelGrid>
 			<h:panelGrid id="panelGridCamposForm" columns="3" cellpadding="10">
 
+
 				<p:outputLabel value="#{msgs.nome}" for="inputTextNomePessoa" />
-				<p:inputText id="inputTextNomePessoa" value="#{cadastroPessoaController.pessoa.nomeCompleto}" maxlength="150" required="true" requiredMessage="#{msgs.essaCampoDeveSerInformado}" />
+				<p:inputText id="inputTextNomePessoa" value="#{cadastroPessoaController.pessoa.nomeCompleto}" maxlength="150" required="true" requiredMessage="#{msgs.essaCampoDeveSerInformado}" onchange="this.value = this.value.trim()" />
 				<p:message for="inputTextNomePessoa" />
 
 				<p:outputLabel for="inputMaskCpf" value="#{msgs.cpf}" />
-				<p:inputMask id="inputMaskCpf" value="#{cadastroPessoaController.pessoa.cpf}" mask="999.999.999-99" required="true" requiredMessage="#{msgs.essaCampoDeveSerInformado}" />
+				<p:inputMask id="inputMaskCpf" value="#{cadastroPessoaController.pessoa.cpf}" mask="999.999.999-99" required="true" requiredMessage="#{msgs.essaCampoDeveSerInformado}" rendered="#{cadastroPessoaController.permitirQueCpfSejaEditado()}">
+					<f:validator validatorId="cpfValidator" />
+				</p:inputMask>
+				<h:outputText value="#{cadastroPessoaController.pessoa.cpf}" rendered="#{not cadastroPessoaController.permitirQueCpfSejaEditado()}"  />
 				<p:message for="inputMaskCpf" />
 
 				<p:outputLabel for="selectBoxGenero" value="#{msgs.genero}" required="true" />
@@ -33,12 +48,12 @@
 				<p:message for="selectBoxGenero" />
 
 				<p:outputLabel value="#{msgs.mae}" for="autoCompleteMae" />
-				<p:autoComplete id="autoCompleteMae" var="pessoa" itemValue="#{pessoa}" itemLabel="#{pessoa.nomeCompleto}" value="#{cadastroPessoaController.pessoa.mae}" completeMethod="#{cadastroPessoaController.pesquisarMaePorNome}" converter="#{pessoaConverter}" forceSelection="true"/>
+				<p:autoComplete id="autoCompleteMae" var="pessoa" itemValue="#{pessoa}" itemLabel="#{pessoa.nomeCompleto}" value="#{cadastroPessoaController.pessoa.mae}" completeMethod="#{cadastroPessoaController.pesquisarMaePorNome}" converter="#{pessoaConverter}" forceSelection="true" />
 
 				<p:message for="autoCompleteMae" />
 
 				<p:outputLabel value="#{msgs.pai}" for="autoCompletePai" />
-				<p:autoComplete id="autoCompletePai" var="pessoa" itemValue="#{pessoa}" itemLabel="#{pessoa.nomeCompleto}" value="#{cadastroPessoaController.pessoa.pai}" completeMethod="#{cadastroPessoaController.pesquisarPaiPorNome}" converter="#{pessoaConverter}" forceSelection="true"/>
+				<p:autoComplete id="autoCompletePai" var="pessoa" itemValue="#{pessoa}" itemLabel="#{pessoa.nomeCompleto}" value="#{cadastroPessoaController.pessoa.pai}" completeMethod="#{cadastroPessoaController.pesquisarPaiPorNome}" converter="#{pessoaConverter}" forceSelection="true" />
 				<p:message for="autoCompletePai" />
 
 				<p:outputLabel for="calendarDataAniversario" value="#{msgs.dataAniversario}" />
@@ -46,12 +61,18 @@
 				<p:message for="calendarDataAniversario" />
 
 				<p:outputLabel value="#{msgs.municipio}" for="inputTextMunicipio" />
-				<p:inputText id="inputTextMunicipio" value="#{cadastroPessoaController.pessoa.municipioNascimento}" maxlength="150" required="true" requiredMessage="#{msgs.essaCampoDeveSerInformado}" />
+				<p:inputText id="inputTextMunicipio" value="#{cadastroPessoaController.pessoa.municipioNascimento}" maxlength="150" required="true" requiredMessage="#{msgs.essaCampoDeveSerInformado}" onchange="this.value = this.value.trim()" />
 				<p:message for="inputTextMunicipio" />
 
 				<p:outputLabel value="#{msgs.uf}" for="inputTextUf" />
-				<p:inputText id="inputTextUf" value="#{cadastroPessoaController.pessoa.ufNascimento}" maxlength="2" requiredMessage="#{msgs.essaCampoDeveSerInformado}" required="true" />
+				<p:inputText id="inputTextUf" value="#{cadastroPessoaController.pessoa.ufNascimento}" maxlength="2" requiredMessage="#{msgs.essaCampoDeveSerInformado}" required="true" onchange="this.value = this.value.trim()" />
 				<p:message for="inputTextUf" />
+
+				<p:outputLabel value="#{msgs.email}" for="inputTextEmail" />
+				<p:inputText id="inputTextEmail" value="#{cadastroPessoaController.pessoa.email}" maxlength="150" requiredMessage="#{msgs.essaCampoDeveSerInformado}" onchange="this.value = this.value.trim()">
+					<f:validator validatorId="emailValidator" />
+				</p:inputText>
+				<p:message for="inputTextEmail" />
 
 				<p:outputLabel for="inputTextCelular" value="#{msgs.telefoneCelular}" />
 				<h:panelGrid>
