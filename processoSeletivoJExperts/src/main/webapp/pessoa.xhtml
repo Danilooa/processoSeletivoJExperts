@@ -13,7 +13,7 @@
 
 
 			<div class="ui-messages-warn ui-corner-all">
-				
+
 				<ul>
 					<li><span class="ui-messages-warn-icon"></span><span class="ui-messages-warn-summary">#{msgs.camposObrigatorios}</span></li>
 				</ul>
@@ -37,7 +37,7 @@
 				<p:inputMask id="inputMaskCpf" value="#{cadastroPessoaController.pessoa.cpf}" mask="999.999.999-99" required="true" requiredMessage="#{msgs.essaCampoDeveSerInformado}" rendered="#{cadastroPessoaController.permitirQueCpfSejaEditado()}">
 					<f:validator validatorId="cpfValidator" />
 				</p:inputMask>
-				<h:outputText value="#{cadastroPessoaController.pessoa.cpf}" rendered="#{not cadastroPessoaController.permitirQueCpfSejaEditado()}"  />
+				<h:outputText value="#{cadastroPessoaController.pessoa.cpf}" rendered="#{not cadastroPessoaController.permitirQueCpfSejaEditado()}" />
 				<p:message for="inputMaskCpf" />
 
 				<p:outputLabel for="selectBoxGenero" value="#{msgs.genero}" required="true" />
@@ -90,7 +90,7 @@
 					<p:message for="inputTextTelefoneFixo" />
 				</h:panelGrid>
 
-				<p:commandButton value="#{msgs.cadastrar}" process="panelGridCamposForm" update="panelGridCamposForm,messages" action="#{cadastroPessoaController.cadastrar}" ajax="true" />
+				<p:commandButton value="#{msgs.cadastrar}" process="panelGridCamposForm" update="panelGridCamposForm,messages" action="#{cadastroPessoaController.cadastrar}" ajax="false" />
 
 			</h:panelGrid>
 		</p:panel>

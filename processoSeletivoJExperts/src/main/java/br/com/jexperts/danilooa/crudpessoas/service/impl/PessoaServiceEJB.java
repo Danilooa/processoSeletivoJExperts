@@ -23,10 +23,10 @@ public class PessoaServiceEJB implements PessoaService {
 
     @Override
     public void inserir(Pessoa pessoa) throws NegocioException {
-	if(pessoa.getPai() != null){
+	if (pessoa.getPai() != null) {
 	    pessoa.setPai(this.getPessoa(pessoa.getPai().getId()));
 	}
-	if(pessoa.getMae() != null){
+	if (pessoa.getMae() != null) {
 	    pessoa.setMae(this.getPessoa(pessoa.getMae().getId()));
 	}
 	if (contarPessoasComMesmoCpf(pessoa.getId(), pessoa.getCpf()) > 0) {
@@ -254,6 +254,10 @@ public class PessoaServiceEJB implements PessoaService {
 	}
 
 	if (todosArgumentosNulos) {
+	    if (!deveContar) {
+		stringBuilderQueryListagemPessoas.append(" order by  ");
+		stringBuilderQueryListagemPessoas.append(" p.nomeCompleto  ");
+	    }
 	    return stringBuilderQueryListagemPessoas.toString();
 	}
 	stringBuilderQueryListagemPessoas.append(" Where ");
