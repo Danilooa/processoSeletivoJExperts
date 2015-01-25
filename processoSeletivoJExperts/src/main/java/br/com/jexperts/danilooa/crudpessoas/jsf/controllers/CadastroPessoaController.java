@@ -3,14 +3,14 @@ package br.com.jexperts.danilooa.crudpessoas.jsf.controllers;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.servlet.http.HttpSession;
 
 import org.primefaces.event.FileUploadEvent;
@@ -29,9 +29,6 @@ public class CadastroPessoaController implements Serializable {
 
     @EJB
     private PessoaService pessoaService;
-
-    @Inject
-    private EntityManager entityManager;
 
     private Pessoa pessoa;
 
@@ -66,17 +63,44 @@ public class CadastroPessoaController implements Serializable {
 	return outcome;
     }
 
+    private boolean nomeASerBuscadoValidao(String nomeASerBuscado) {
+	if (nomeASerBuscado == null) {
+	    return false;
+	}
+	if (nomeASerBuscado.trim().length() < 4) {
+	    return false;
+	}
+	return true;
+    }
+
+    public List<Pessoa> pesquisarMaePorNome(String nomeASerBuscado) {
+	if (!nomeASerBuscadoValidao(nomeASerBuscado)) {
+	    return new ArrayList<Pessoa>();
+	}
+
+	return pessoaService.listarPorNome(nomeASerBuscado, 5, pessoa, pessoa.getPai());
+    }
+
+    public List<Pessoa> pesquisarPaiPorNome(String nomeASerBuscado) {
+	if (!nomeASerBuscadoValidao(nomeASerBuscado)) {
+	    return new ArrayList<Pessoa>();
+	}
+
+	return pessoaService.listarPorNome(nomeASerBuscado, 5, pessoa, pessoa.getMae());
+    }
+
     public void tratarUploadImagem(FileUploadEvent event) {
 	byte[] imagem = new byte[(int) event.getFile().getSize()];
 	pessoa.setImagem(imagem);
 	DataInputStream dataInputStream = null;
-	;
+
 	try {
 	    dataInputStream = new DataInputStream(event.getFile().getInputstream());
 	    dataInputStream.readFully(imagem);
 	} catch (IOException e) {
 	    throw new RuntimeException(e);
 	}
+
 	FacesContext facesContext = FacesContext.getCurrentInstance();
 	HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
 	session.setAttribute("imagem", imagem);
@@ -95,7 +119,7 @@ public class CadastroPessoaController implements Serializable {
 	    return pessoa;
 	}
 	if (idPessoa != null) {
-	    pessoa = entityManager.find(Pessoa.class, idPessoa);
+	    pessoa = pessoaService.getPessoa(idPessoa);
 	    return pessoa;
 	}
 	pessoa = new Pessoa();

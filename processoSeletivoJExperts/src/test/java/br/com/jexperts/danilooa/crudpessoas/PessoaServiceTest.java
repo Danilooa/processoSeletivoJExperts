@@ -435,4 +435,27 @@ public class PessoaServiceTest extends TransactionalTestCase {
 	Assert.assertEquals("Nao contou o total de registros corretamente quando o nome  foi informado", new Long(1), new Long(numeroTotalDeRegistros));
     }
 
+    @Test
+    public void devePesquisarPessoasPorNome() {
+	gerarMassaDadosTestesListagem();
+	List<Pessoa> listPessoas = pessoaService.listarPorNome("Pessoa1", null);
+	Assert.assertEquals("Nao pesquisou as pessoas corretamente", 11, listPessoas.size());
+    }
+
+    @Test
+    public void devePesquisarPessoasPorNomeIgnorandoUmPessoaExpecifica() {
+	gerarMassaDadosTestesListagem();
+	List<Pessoa> listPessoas = pessoaService.listarPorNome("Pessoa1", null);
+	Pessoa pessoaASerIgnorada = listPessoas.get(5);
+	listPessoas = pessoaService.listarPorNome("Pessoa1", null, pessoaASerIgnorada);
+	Assert.assertEquals("Nao ignoraou a pessoa corretamente", 10, listPessoas.size());
+    }
+
+    @Test
+    public void devePesquisarPessoasLimitandoONumeroMaximoDeRegistros() {
+	gerarMassaDadosTestesListagem();
+	List<Pessoa> listPessoas = pessoaService.listarPorNome("Pessoa1", 3);
+	Assert.assertEquals("Nao limitou a quantidade maxima de registros", 3, listPessoas.size());
+    }
+
 }

@@ -44,7 +44,7 @@
 
 		<p:dataTable id="tablePessoa" var="pessoa" value="#{filtroPessoaController.lazyModel}" paginator="true" rows="10" paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}" rowsPerPageTemplate="10" emptyMessage="#{msgs.naoAPessoasCadastradas}" lazy="true">
 			<p:column>
-				<img src="ProcessadorImagemServlet?idPessoa=#{pessoa.id}" width="100" height="100"/>
+				<img src="ProcessadorImagemServlet?idPessoa=#{pessoa.id}" width="100" height="100" />
 			</p:column>
 			<p:column headerText="#{msgs.nome}">
 				<h:outputText value="#{pessoa.nomeCompleto}" />
@@ -59,12 +59,10 @@
 				<h:outputText value="#{pessoa.mae.nomeCompleto}" />
 			</p:column>
 			<p:column>
-				<h:panelGrid columns="2">
-					<p:commandButton id="botaoExcluir" value="#{msgs.excluir}" actionListener="#{filtroPessoaController.selecionarPessoa(pessoa)}" oncomplete="'#{filtroPessoaController.pessoaPossuiFilhos(pessoa)}' == 'true' ? PF('widgetVarDialogConfirmacaoExclucaoComFilhos').show(): PF('widgetVarDialogConfirmacaoExclucaoSemFilhos').show()" />
-					<p:button id="botaoAlterar" value="#{msgs.alterar}" outcome="pessoa">
-						<f:param name="idPessoa" value="#{pessoa.id}" />
-					</p:button>
-				</h:panelGrid>
+				<p:commandButton id="botaoExcluir" value="#{msgs.excluir}" actionListener="#{filtroPessoaController.selecionarPessoa(pessoa)}" oncomplete="'#{filtroPessoaController.pessoaPossuiFilhos(pessoa)}' == 'true' ? PF('widgetVarDialogConfirmacaoExclucaoComFilhos').show(): PF('widgetVarDialogConfirmacaoExclucaoSemFilhos').show()" />
+				<p:button id="botaoAlterar" value="#{msgs.alterar}" outcome="pessoa">
+					<f:param name="idPessoa" value="#{pessoa.id}" />
+				</p:button>
 			</p:column>
 		</p:dataTable>
 

@@ -53,4 +53,30 @@
 		</query>
 	</named-query>
 
+	<named-query name="LISTA_PESSOAS_POR_NOME">
+		<query>
+			select 
+				p 
+			from 
+				Pessoa p 
+			where
+				upper(p.nomeCompleto) like :nomeCompleto
+			order by
+				p.nomeCompleto 
+		</query>
+	</named-query>
+
+	<named-query name="OBTEM_PESSOA_POR_ID_COM_MAE_E_PAI">
+		<query>
+			select 
+				p 
+			from 
+				Pessoa p 
+				left join fetch p.mae
+				left join fetch p.pai				
+			where
+				p.id = :idPessoa
+		</query>
+	</named-query>
+
 </entity-mappings>
