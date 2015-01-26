@@ -333,8 +333,8 @@ public class PessoaServiceTest extends TransactionalTestCase {
 	filtroListagemPessoasDTO.setQuantidadeDeRegistrosPorPagina(quantidadeDeRegistrosPorPagina);
 	List<Pessoa> primeiraPagina = pessoaService.listarPessoas(filtroListagemPessoasDTO);
 	Assert.assertEquals("O tamanho da primeira pagina nao esta correto", new Long(quantidadeDeRegistrosPorPagina), new Long(primeiraPagina.size()));
-	Assert.assertEquals("O primeiro registro da primeira pagina nao foi o esperado", "Avo Masculino", primeiraPagina.get(0).getNomeCompleto());
-	Assert.assertEquals("O ultimo registro da primeira pagina nao foi o esperado", "Pessoa7", primeiraPagina.get(9).getNomeCompleto());
+	Assert.assertEquals("O primeiro registro da primeira pagina nao foi o esperado", "Avo Feminino", primeiraPagina.get(0).getNomeCompleto());
+	Assert.assertEquals("O ultimo registro da primeira pagina nao foi o esperado", "Pessoa15", primeiraPagina.get(9).getNomeCompleto());
 
 	filtroListagemPessoasDTO.setCpf(null);
 	filtroListagemPessoasDTO.setNomeMaeOuPai(null);
@@ -343,14 +343,14 @@ public class PessoaServiceTest extends TransactionalTestCase {
 	filtroListagemPessoasDTO.setIndexDoPrimeiraRegistroDaPagina(quantidadeDeRegistrosPorPagina);
 	List<Pessoa> segundaPagina = pessoaService.listarPessoas(filtroListagemPessoasDTO);
 	Assert.assertEquals("O tamanho da segunda pagina nao esta correto", new Long(quantidadeDeRegistrosPorPagina), new Long(segundaPagina.size()));
-	Assert.assertEquals("O primeiro registro da segunda pagina nao foi o esperado", "Pessoa8", segundaPagina.get(0).getNomeCompleto());
-	Assert.assertEquals("O ultimo registro da segunda pagina nao foi o esperado", "Pessoa17", segundaPagina.get(9).getNomeCompleto());
+	Assert.assertEquals("O primeiro registro da segunda pagina nao foi o esperado", "Pessoa16", segundaPagina.get(0).getNomeCompleto());
+	Assert.assertEquals("O ultimo registro da segunda pagina nao foi o esperado", "Pessoa24", segundaPagina.get(9).getNomeCompleto());
 
 	filtroListagemPessoasDTO.setIndexDoPrimeiraRegistroDaPagina(quantidadeDeRegistrosPorPagina * 2);
 	List<Pessoa> terceiraPagina = pessoaService.listarPessoas(filtroListagemPessoasDTO);
 	Assert.assertEquals("O tamanho da terceira pagina nao esta correto", new Long(7), new Long(terceiraPagina.size()));
-	Assert.assertEquals("O primeiro registro da terceira pagina nao foi o esperado", "Pessoa18", terceiraPagina.get(0).getNomeCompleto());
-	Assert.assertEquals("O ultimo registro da terceira pagina nao foi o esperado", "Pessoa24", terceiraPagina.get(6).getNomeCompleto());
+	Assert.assertEquals("O primeiro registro da terceira pagina nao foi o esperado", "Pessoa3", terceiraPagina.get(0).getNomeCompleto());
+	Assert.assertEquals("O ultimo registro da terceira pagina nao foi o esperado", "Pessoa9", terceiraPagina.get(6).getNomeCompleto());
 
     }
 
