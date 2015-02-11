@@ -16,6 +16,7 @@ public class PessoaLazyDataModel extends LazyDataModel<Pessoa> {
 
     private PessoaService pessoaService;
     private FiltroListagemPessoasDTO filtroListagemPessoasDTO;
+    private List<Pessoa> pessoasDaPaginaCorrente;
 
     public PessoaLazyDataModel(PessoaService pessoaService, FiltroListagemPessoasDTO filtroListagemPessoasDTO) {
 	this.pessoaService = pessoaService;
@@ -37,8 +38,15 @@ public class PessoaLazyDataModel extends LazyDataModel<Pessoa> {
 	filtroListagemPessoasDTO.setIndexDoPrimeiraRegistroDaPagina(first);
 	filtroListagemPessoasDTO.setQuantidadeDeRegistrosPorPagina(pageSize);
 	List<Pessoa> listaPessoas = pessoaService.listarPessoas(filtroListagemPessoasDTO);
+	this.pessoasDaPaginaCorrente = listaPessoas;
 	int dataSize = Integer.valueOf("" + pessoaService.contaTotalPessoas(filtroListagemPessoasDTO));
 	this.setRowCount(dataSize);
 	return listaPessoas;
     }
+
+    public List<Pessoa> getPessoasDaPaginaCorrente() {
+        return pessoasDaPaginaCorrente;
+    }
+    
+    
 }

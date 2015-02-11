@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:composite="http://java.sun.com/jsf/composite" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<composite:interface>
+	<composite:attribute name="dataModel" type="br.com.jexperts.danilooa.crudpessoas.datamodel.PessoaPerfilDataModel" />
+</composite:interface>
+<composite:implementation>
+	<p:dialog id="dialog" header="#{msgs.pessoas}" widgetVar="#{cc.id}" height="150">
+		<p:panelGrid columns="2">
+			<p:panelGrid>
+				<img src="ProcessadorImagemServlet?idPessoa=#{cc.attrs.dataModel.pessoaCorrente.id}" width="100" height="100" />
+			</p:panelGrid>
+			<p:panelGrid columns="2">
+				<p:outputLabel value="#{msgs.nome}" />
+				<p:outputLabel value="#{cc.attrs.dataModel.pessoaCorrente.nomeCompleto}" />
+				<p:outputLabel value="#{msgs.cpf}" />
+				<p:outputLabel value="#{cc.attrs.dataModel.pessoaCorrente.cpf}" />
+			</p:panelGrid>
+		</p:panelGrid>
+
+		<p:panelGrid columns="2">
+			<p:commandButton value="Retroceder" actionListener="#{cc.attrs.dataModel.retroceder()}" update=":#{cc.clientId}:dialog" oncomplete="PF('#{cc.id}').show();" disabled="#{not cc.attrs.dataModel.deveHabilitarBotaoRetroceder()}" />
+			<p:commandButton value="Avançar" actionListener="#{cc.attrs.dataModel.avancar()}" update=":#{cc.clientId}:dialog" oncomplete="PF('#{cc.id}').show();" disabled="#{not cc.attrs.dataModel.deveHabilitarBotaoAvancar()}" />
+		</p:panelGrid>
+	</p:dialog>
+</composite:implementation>
+</html>

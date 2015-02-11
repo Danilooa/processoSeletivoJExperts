@@ -11,6 +11,7 @@ import org.primefaces.component.datatable.DataTable;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 
+import br.com.jexperts.danilooa.crudpessoas.datamodel.PessoaPerfilDataModel;
 import br.com.jexperts.danilooa.crudpessoas.dto.FiltroListagemPessoasDTO;
 import br.com.jexperts.danilooa.crudpessoas.entity.Pessoa;
 import br.com.jexperts.danilooa.crudpessoas.enums.Mensagens;
@@ -27,13 +28,15 @@ public class FiltroPessoaController implements Serializable {
     @EJB
     private PessoaService pessoaService;
 
-    private LazyDataModel<Pessoa> lazyModel;
+    private PessoaLazyDataModel lazyModel;
     private FiltroListagemPessoasDTO filtroListagemPessoasDTO;
 
     private Pessoa pessoaSelecionada;
     
     private DataTable dataTable;
 
+    private PessoaPerfilDataModel pessoaPerfilDataModel = null;
+    
     @PostConstruct
     public void init() {
 	filtroListagemPessoasDTO = new FiltroListagemPessoasDTO();
@@ -53,7 +56,7 @@ public class FiltroPessoaController implements Serializable {
 	this.filtroListagemPessoasDTO = filtroListagemPessoasDTO;
     }
 
-    public void setLazyModel(LazyDataModel<Pessoa> lazyModel) {
+    public void setLazyModel(PessoaLazyDataModel lazyModel) {
 	this.lazyModel = lazyModel;
     }
 
@@ -63,6 +66,11 @@ public class FiltroPessoaController implements Serializable {
 
     public void selecionarPessoa(Pessoa pessoa){
 	this.pessoaSelecionada = pessoa;
+    }
+    
+    public void exibirPerfil(Pessoa pessoa){
+	Integer indexPessoaCorrente = lazyModel.getPessoasDaPaginaCorrente().indexOf(pessoa);
+	this.pessoaPerfilDataModel = new PessoaPerfilDataModel(indexPessoaCorrente, lazyModel.getPessoasDaPaginaCorrente());
     }
     
     public void listar(){
@@ -99,6 +107,13 @@ public class FiltroPessoaController implements Serializable {
     public void setDataTable(DataTable dataTable) {
         this.dataTable = dataTable;
     }
-    
+
+    public PessoaPerfilDataModel getPessoaPerfilDataModel() {
+        return pessoaPerfilDataModel;
+    }
+
+    public void setPessoaPerfilDataModel(PessoaPerfilDataModel pessoaPerfilDataModel) {
+        this.pessoaPerfilDataModel = pessoaPerfilDataModel;
+    }
     
 }

@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions" xmlns:profile="http://java.sun.com/jsf/composite/profile">
 <h:head>
 </h:head>
 <body>
-	<h:form>
+	<h:form id="form">
 		<p:growl id="messages" for="exibirGrowl" />
 		<p:panel header="Filtro de pessoas" style="margin-bottom:20px">
 			<h:panelGrid columns="3" cellpadding="10">
@@ -54,6 +54,7 @@
 			</p:column>
 			<p:column>
 				<p:commandButton id="botaoExcluir" value="#{msgs.excluir}" actionListener="#{filtroPessoaController.selecionarPessoa(pessoa)}" oncomplete="'#{filtroPessoaController.pessoaPossuiFilhos(pessoa)}' == 'true' ? PF('widgetVarDialogConfirmacaoExclucaoComFilhos').show(): PF('widgetVarDialogConfirmacaoExclucaoSemFilhos').show()" />
+				<p:commandButton id="botaoPerfil" value="#{msgs.perfil}"  actionListener="#{filtroPessoaController.exibirPerfil(pessoa)}"   update=":form:personProfile:dialog" oncomplete="PF('personProfile').show();"/>
 				<p:button id="botaoAlterar" value="#{msgs.alterar}" outcome="pessoa">
 					<f:param name="idPessoa" value="#{pessoa.id}" />
 				</p:button>
@@ -80,6 +81,7 @@
 				</h:panelGrid>
 			</h:panelGrid>
 		</p:dialog>
+		<profile:personProfile id="personProfile" dataModel="#{filtroPessoaController.pessoaPerfilDataModel}"/>
 	</h:form>
 </body>
 </html>
