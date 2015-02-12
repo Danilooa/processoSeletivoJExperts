@@ -16,5 +16,6 @@ public interface PessoaService {
     Long contaTotalPessoas(FiltroListagemPessoasDTO filtroListagemPessoasDTO);
     Pessoa getPessoa(Long idPessoa);
     List<Pessoa> listarPorNome(String nome, Integer quantidadeMaximaDeRegistros, Pessoa... pessoaASerIgnorada);
+    byte[] getImagemPessoa(Long idPessoa);
 
 }

@@ -86,8 +86,15 @@ public class FiltroPessoaController implements Serializable {
 	lazyModel.setRowCount(lazyModel.getRowCount() - 1);
     }
 
-    public String pessoaPossuiFilhos(Pessoa pessoa) {
-	return pessoaService.possuiFilhos(pessoa.getId()).toString();
+    public String getMensagemDelecao() {
+	if(pessoaSelecionada == null){
+	    return "";
+	}
+	
+	if(pessoaService.possuiFilhos(pessoaSelecionada.getId())){
+	    return JavaServerFacesUtils.getMessage(Mensagens.PESSOA_POSSUI_FILHOS_QUE_SERAO_EXCLUIDOS_RECURSIVAMENTE.name());
+	}
+	return JavaServerFacesUtils.getMessage(Mensagens.DESEJA_EXCLUIR_PESSOA.name());
     }
 
     public String getMessagemConfirmacaoExclusao() {

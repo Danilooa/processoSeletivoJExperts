@@ -2,6 +2,7 @@ package br.com.jexperts.danilooa.crudpessoas.entity;
 
 import java.util.Date;
 
+import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -25,6 +26,7 @@ public class Pessoa {
     private String cpf;
     private String email;
     @Lob
+    @Basic(fetch=FetchType.LAZY)
     private byte[] imagem;
 
     @ManyToOne(fetch = FetchType.LAZY)

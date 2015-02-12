@@ -79,4 +79,15 @@
 		</query>
 	</named-query>
 
+	<named-query name="OBTEM_IMAGEM_PESSOA">
+		<query>
+			select 
+				p.imagem 
+			from 
+				Pessoa p 
+			where
+				p.id = :idPessoa
+		</query>
+	</named-query>
+
 </entity-mappings>

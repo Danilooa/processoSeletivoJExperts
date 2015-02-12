@@ -302,4 +302,11 @@ public class PessoaServiceEJB implements PessoaService {
 	return (Pessoa) queryListaPessoasPorNome.getSingleResult();
     }
 
+    @Override
+    public byte[] getImagemPessoa(Long idPessoa) {
+	Query queryImagemPessoa = entityManager.createNamedQuery(IdentificadorQueries.OBTEM_IMAGEM_PESSOA.name());
+	queryImagemPessoa.setParameter("idPessoa", idPessoa);
+	return (byte[]) queryImagemPessoa.getSingleResult();
+    }
+
 }

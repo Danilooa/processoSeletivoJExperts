@@ -4,20 +4,19 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import br.com.jexperts.danilooa.crudpessoas.entity.Pessoa;
+import br.com.jexperts.danilooa.crudpessoas.service.PessoaService;
 
 @WebServlet("/ProcessadorImagemServlet")
 public class ProcessadorImagemServlet extends HttpServlet {
 
     @Inject
-    private EntityManager entityManager;
+    private PessoaService pessoaService;
 
     private static final long serialVersionUID = 1L;
 
@@ -36,13 +35,11 @@ public class ProcessadorImagemServlet extends HttpServlet {
 
 	String stringIdPessoa = request.getParameter("idPessoa");
 
-	Pessoa pessoa = null;
 	if (!stringIdPessoa.trim().isEmpty()) {
-	    pessoa = entityManager.find(Pessoa.class, Long.valueOf(stringIdPessoa));
+	    imagem = pessoaService.getImagemPessoa(Long.valueOf(stringIdPessoa));
 	}
 
-	if (pessoa != null && pessoa.getImagem() != null) {
-	    imagem = pessoa.getImagem();
+	if (imagem != null) {
 	    escreverImagemNaOutput(response, imagem);
 	    return;
 	}
